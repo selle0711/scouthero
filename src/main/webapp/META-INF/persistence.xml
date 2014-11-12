@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	<persistence-unit name="default" transaction-type="RESOURCE_LOCAL">		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+ 		<!--  <non-jta-data-source>java:/comp/env/scoutheroDS</non-jta-data-source> -->
+		<properties>
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/scouthero"/>
+			<property name="hibernate.connection.username" value="scouthero"/>
+			<property name="hibernate.connection.password" value="scouthero"/>
+	
+			<!-- ################################################################ -->
+			<!-- Treiber und Cacheeinstellungen -->
+			<!-- ################################################################ -->
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+		
+			<property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
+			<property name="hibernate.c3p0.acquire_increment" value="1"/>
+			<property name="hibernate.c3p0.idle_test_period" value="60"/>
+			<property name="hibernate.c3p0.min_size" value="1"/>
+			<property name="hibernate.c3p0.max_size" value="25"/>
+			<property name="hibernate.c3p0.max_statements" value="50"/>
+			<property name="hibernate.c3p0.timeout" value="1800"/>
+			<property name="hibernate.c3p0.acquireRetryAttempts" value="1"/>
+			<property name="hibernate.c3p0.acquireRetryDelay" value="250"/>
+			<property name="hibernate.c3p0.testConnectionOnCheckout" value="true"/>
+	
+			<!-- Cacheeinstellungen -->
+			<!-- <property name="cache.provider_class" value="org.hibernate.cache.EhCacheProvider</property> -->
+			<property name="current_session_context_class" value="thread"/>
+			<property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JDBCTransactionFactory"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+	
+			<!-- ################################################################ -->
+			<!-- Datenaktualisierungseinstellungen -->
+			<!-- ################################################################ -->
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+			<property name="hibernate.show_sql" value="false"/>
+			<property name="hibernate.connection.autocommit" value="true"/>
+			
+		</properties>
+		
+	</persistence-unit>
+		
+</persistence>

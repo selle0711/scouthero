@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+		
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>  
+			    <p:menuitem value="Home" outcome="index" />  
+			     <p:menuitem value="Netzwerk" url="#" />
+			      <p:menuitem value="Mein Profil" outcome="userProfile" />
+			</p:breadCrumb> 
+		</ui:define>
+		
+		
+		<ui:define name="content">
+			<h:form id="form">
+				
+				<p:panel id="contentPanel" header="Mein Profil" styleClass="contentPanel">  
+					 <p:accordionPanel id="accord" dynamic="true" cache="true" >  
+				        <p:tab id="tab1" title="Accountdaten">
+				        	<p:messages id="accMessages" errorClass="error" />    
+				            <h:panelGrid columns="2" cellpadding="10">
+								<h:outputLabel for="firstname" value="Vorname: *" />
+								<p:inputText required="true" id="firstname" value="#{userHandler.user.firstName}" />
+									
+								<h:outputLabel for="lastname" value="Nachname: *" />
+								<p:inputText id="lastname" required="true" value="#{userHandler.user.name}" />
+									
+								<h:outputLabel for="age" value="Alter: " />
+								<p:inputText  id="age" value="#{userHandler.user.age}"/>
+								
+								<h:outputLabel for="plz" value="PLZ: " />
+								<p:inputText id="plz" value="#{userHandler.user.postalCode}" />
+		
+								<h:outputLabel for="city" value="Stadt: " />
+								<p:inputText id="city" value="#{userHandler.user.city}" />
+								
+								<h:outputLabel for="email" value="Email: *" />
+								<p:inputText id="email" required="true" label="Email" value="#{userHandler.user.email}" >
+									<f:validator validatorId="emailvalidierer" />
+								</p:inputText>
+		
+								<h:outputLabel for="phone" value="Tel: " />
+								<p:inputText id="phone" value="#{userHandler.user.phone}" />
+		
+								<h:outputLabel for="info" value="Zusätzliche Infos: " style="vertical-align:top"/>
+								<h:panelGroup>
+									<p:inputTextarea id="info" value="#{userHandler.user.additionalInfo}" rows="5" cols="30" 
+										counter="counter" maxlength="255" counterTemplate="Anzahl Zeichen übrig: {0}" />
+									<h:outputLabel /><br/>
+									<h:outputLabel id="counter" />  
+								</h:panelGroup>
+										
+				            </h:panelGrid>  
+				            <p:commandButton value="Speichern" update=":form:accord:accMessages" actionListener="#{userHandler.updateUser}" />
+				        </p:tab>  
+				        <p:tab id="tab2" title="Vereinsdetails" rendered="#{userHandler.accountForClub}">  
+				        	<p:messages id="clubMessages"  errorClass="error" />    
+				        	<h:panelGrid id="panelClub" columns="2" style="border:0px; width:100%" >
+								<h:form>
+									<p:panel id="clubDetail" header="Details" >
+										<p:panelGrid columns="2" id="detailGrid">
+											<h:outputLabel for="nameD" value="Name: " />
+											<p:inputText required="true"  id="nameD" value="#{clubHandler.userClub.name}"  />
+											
+											
+											<h:outputLabel for="plzD" value="PLZ: " />
+											<p:inputText required="true" id="plzD" value="#{clubHandler.userClub.plz}"/>
+											
+											<h:outputLabel for="cityD" value="Stadt: " />
+											<p:inputText required="true" id="cityD" value="#{clubHandler.userClub.city}"/>
+											
+											<h:outputLabel for="infosD" value="Beschreibung: " />
+											<p:inputTextarea rows="5" cols="30"  autoResize="false" id="infosD" value="#{clubHandler.userClub.description}" />
+										</p:panelGrid>
+										<h:commandButton value="Speichern" icon="ui-icon-disk" action="#{clubHandler.updateClub}" />
+									</p:panel>
+								</h:form>
+							</h:panelGrid>
+						    
+						    
+				        </p:tab>  
+				        <p:tab title="Mannschaftsdetails" rendered="#{userHandler.accountForClub}">  
+				            <h:panelGrid columns="2" cellpadding="10">  
+					            <p:dataTable value="#{clubHandler.userTeams}" sortMode="multiple" var="team" rowClasses="odd, even" headerClass="header" footerClass="footer" styleClass="content">
+									<f:facet name="footer">Stand: <h:outputText value="#{dateHandler.now}"><f:convertDateTime  timeZone="Europe/Berlin" pattern="dd.MM.yyyy HH:mm"/></h:outputText></f:facet>
+									<p:column headerText="Name">
+										#{team.type}
+									</p:column>
+									
+								</p:dataTable>
+				            </h:panelGrid>  
+				        </p:tab>  
+				    </p:accordionPanel>  
+				    <p>
+					   	<p:commandButton value="Passwort ändern" actionListener="#{userHandler.updateUser}" 
+					   		icon="ui-icon-gear" iconPos="right"/>
+					   	<p:commandButton value="Accout löschen" actionListener="#{userHandler.updateUser}" 
+					   		icon="ui-icon-trash" iconPos="right"/>
+					</p>
+				   </p:panel>
+				
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

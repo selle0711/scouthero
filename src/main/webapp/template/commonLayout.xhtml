@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:head>
+		<link rel="stylesheet" type="text/css" href="template/style.css" />
+		<title>#{msg.title}</title>
+	</h:head>
+	<body>
+		<div id="header">
+			<img src="template/images/logo_scouthero.jpg" alt="Logo von scouthero.de"/>
+		</div>
+		<div id="menue">
+			<ui:insert name="breadcrumb" />
+		</div>
+		<div id="leftPanel">
+			<h:form>
+				<p:growl id="messages"/>  
+				<p:menu model="#{menuBean.model}"/>  
+				<br/>
+
+				<p:panel rendered="#{userHandler.loggedIn}" header="#{userHandler.type}">
+					<h:panelGrid columns="2">
+						
+						<h:outputText styleClass="ui-icon  ui-icon-person" />
+						<p:outputLabel value="#{userHandler.user.firstName} #{userHandler.user.name}" /> 
+						
+						<h:outputText styleClass="ui-icon  ui-icon-mail-closed" />
+						<p:outputLabel value="0 Nachrichten"/>
+						
+						<h:outputText styleClass="ui-icon  ui-icon-calculator" />
+						<p:outputLabel value="#{userHandler.registerDate}"/>
+					</h:panelGrid>
+					
+					<f:facet name="actions">
+						<h:commandLink action="#{userHandler.logout}"
+							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+							<h:outputText styleClass="ui-icon  ui-icon-power" />
+						</h:commandLink>
+						<h:commandLink action="../userProfile"
+							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+							<h:outputText styleClass="ui-icon  ui-icon-wrench" />
+						</h:commandLink>
+						
+					</f:facet>
+				</p:panel>
+			</h:form>
+		</div>
+		
+		<div id="content">
+			<div id="subContent">
+				<ui:insert name="content" />
+			</div>
+		</div>
+		<div id="footer">
+			#{msg.footer}
+		</div>
+	</body>
+</html>

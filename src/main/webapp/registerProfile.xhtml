@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="Home" outcome="index" />
+				<p:menuitem value="Netzwerk" url="#" />
+				<p:menuitem value="Registrieren" outcome="registerProfile" />
+			</p:breadCrumb>
+		</ui:define>
+		
+		<ui:define name="content">
+			<h:form id="registerForm">
+				<p:growl id="messages" />
+				<p:panel header=" Registrieren" styleClass="contentPanel">
+					<p:wizard widgetVar="wiz"
+						flowListener="#{userHandler.onFlowProcess}">
+
+						<p:tab id="registrationType" title="Art">
+							<p:panel header="Art der Registrierung">
+								<p:messages errorClass="error" />
+								<h:panelGrid columns="2" columnClasses="label, value"
+									styleClass="grid">
+									<h:outputLabel value="Typ: *" />
+									<p:selectOneRadio id="type" enabledClass="radio"
+										value="#{userHandler.user.type}" required="true">
+										<f:selectItem id="item1" itemLabel="Spieler" itemValue="1" />
+										<f:selectItem id="item2" itemLabel="Verein" itemValue="2" />
+									</p:selectOneRadio>
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+
+						<p:tab id="personal" title="Personal">
+							<p:panel header="Persönliche Details">
+								<p:messages errorClass="error" />
+								<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
+
+									<h:outputLabel for="loginname" value="Loginname: *" />
+									<p:inputText required="true" id="loginname"	value="#{userHandler.user.loginName}" />
+
+									<h:outputLabel for="password" value="Passwort: *" />
+									<p:password id="password" value="#{userHandler.user.password}"
+										feedback="true" promptLabel="Bitte Passwort eingeben"
+										weakLabel="unsicher" goodLabel="gut" strongLabel="sicher">
+									</p:password>
+
+									<h:outputLabel for="pwd2" value="Passwort (wiederholen) : *" />
+									<p:password id="pwd2" value="#{userHandler.repeatedPWD}" required="true" />
+
+									<h:outputLabel for="firstname" value="Vorname: *" />
+									<p:inputText required="true" id="firstname" value="#{userHandler.user.firstName}" />
+										
+									<h:outputLabel for="lastname" value="Nachname: *" />
+									<p:inputText id="lastname" required="true" value="#{userHandler.user.name}" />
+										
+									<h:outputLabel for="age" value="Alter: " />
+									<p:inputText  id="age" value="#{userHandler.user.age}"/>
+									
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+
+						<p:tab id="address" title="Address">
+							<p:panel header="Adress Details">
+
+								<p:messages errorClass="error" />
+
+								<h:panelGrid columns="2" columnClasses="label, value">
+
+									<h:outputLabel for="plz" value="PLZ: " />
+									<p:inputText id="plz" value="#{userHandler.user.postalCode}" />
+
+									<h:outputLabel for="city" value="Stadt: " />
+									<p:inputText id="city" value="#{userHandler.user.city}" />
+
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+
+						<p:tab id="contact" title="Contact">
+							<p:panel header="Contact Information">
+
+								<p:messages errorClass="error" />
+
+								<h:panelGrid columns="2" columnClasses="label, value">
+									<h:outputLabel for="email" value="Email: *" />
+									<p:inputText id="email" required="true" label="Email" value="#{userHandler.user.email}" >
+										<f:validator validatorId="emailvalidierer" />
+									</p:inputText>
+
+									<h:outputLabel for="phone" value="Tel: " />
+									<p:inputText id="phone" value="#{userHandler.user.phone}" />
+
+									<h:outputLabel for="info" value="Zusätzliche Infos: " />
+									<p:inputTextarea id="info" value="#{userHandler.user.additionalInfo}" rows="5" cols="30" 
+										counter="counter" maxlength="255" counterTemplate="Anzahl Zeichen übrig: {0}" />
+									<h:outputLabel />
+									<h:outputLabel id="counter" />  
+										 
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+
+						<p:tab id="confirm" title="Bestätigung">
+							<p:panel header="Bestätigung">
+
+								<h:panelGrid id="confirmation" columns="2">
+									<h:outputLabel value="Login: " />
+									<h:outputLabel value="#{userHandler.user.loginName}" />
+
+									<h:outputLabel value="Vorname: " />
+									<h:outputLabel value="#{userHandler.user.firstName}" />
+
+									<h:outputLabel value="Nachname: " />
+									<h:outputLabel value="#{userHandler.user.name}" />
+
+									<h:outputLabel value="Alter: " />
+									<h:outputLabel value="#{userHandler.user.age}" />
+		                      
+									<h:outputLabel value="PLZ: " />
+									<h:outputLabel value="#{userHandler.user.postalCode}" />
+
+									<h:outputLabel value="Stadt: " />
+									<h:outputLabel value="#{userHandler.user.city}" />
+
+									<h:outputLabel value="Email: " />
+									<h:outputLabel value="#{userHandler.user.email}" />
+
+									<h:outputLabel value="Tel: " />
+									<h:outputLabel value="#{userHandler.user.phone}" />
+
+									<h:outputLabel value="zusätzliche Infos: " />
+									<h:outputLabel value="#{userHandler.user.additionalInfo}" />
+
+									<h:outputText />
+									<h:outputText />
+								</h:panelGrid>
+
+								<p:commandButton value="Registrieren" update="messages"
+									actionListener="#{userHandler.register}" />
+
+							</p:panel>
+						</p:tab>
+
+					</p:wizard>
+				
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>
