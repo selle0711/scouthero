@@ -1,18 +1,16 @@
 package de.scouthero.managedBeans;
 
 import javax.el.ELResolver;
-import javax.el.MethodExpression;
-import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.component.separator.Separator;
-import org.primefaces.component.submenu.Submenu;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSeparator;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.MenuModel;
 
 @ManagedBean
 @SessionScoped
@@ -27,35 +25,24 @@ public class MenuBean {
     	 model = new DefaultMenuModel();  
          
          //First submenu  
-         Submenu submenu = new Submenu();  
-         submenu.setLabel("Navigation");  
+    	 DefaultSubMenu submenu = new DefaultSubMenu("Navigation");  
            
-         MenuItem item = new MenuItem();  
-         item.setValue("Home");  
-         item.setIcon("ui-icon-home");
-         item.setOutcome("index");
-         submenu.getChildren().add(item);  
+    	 DefaultMenuItem item = new DefaultMenuItem("Home", "ui-icon-home", "index");  
+         submenu.addElement(item);  
          
-         model.addSubmenu(submenu);  
+         model.addElement(submenu);  
            
          //Second submenu  
-         submenu = new Submenu();  
-         submenu.setLabel("Transfermarkt");  
+         submenu = new DefaultSubMenu("Transfermarkt");  
            
-         item = new MenuItem();  
-         item.setValue("Vereinssuche");  
-         item.setOutcome("showClubs");  
-         item.setIcon("ui-icon-search");
+         item = new DefaultMenuItem("Vereinssuche","ui-icon-search", "showClubs");  
          
-         submenu.getChildren().add(item);  
+         submenu.addElement(item);  
            
-         item = new MenuItem();  
-         item.setValue("Spielersuche");  
-         item.setOutcome("showClubs");  
-         item.setIcon("ui-icon-search");
-         submenu.getChildren().add(item);  
+         item = new DefaultMenuItem("Spielersuche", "ui-icon-search", "showClubs");  
+         submenu.addElement(item);  
            
-         model.addSubmenu(submenu);  
+         model.addElement(submenu);  
 //         
 //         FacesContext ctx = FacesContext.getCurrentInstance();
 //         HttpSession session = (HttpSession)ctx.getExternalContext().getSession(true);
@@ -66,59 +53,36 @@ public class MenuBean {
          UserHandler userHandler = (UserHandler) el.getValue(FacesContext.getCurrentInstance()
          	      .getELContext(), null, "userHandler");
          
-         Submenu network = new Submenu();  
-         network.setLabel("Scouthero-Netzwerk");  
+         DefaultSubMenu network = new DefaultSubMenu("Scouthero-Netzwerk");  
          if (userHandler != null && userHandler.getUser() != null && userHandler.isLoggedIn()) {
-         	 item = new MenuItem();  
-              item.setValue("Mein Profil");  
-              item.setOutcome("userProfile");  
-              item.setIcon("ui-icon-wrench");
-              network.getChildren().add(item);  
+         	 item = new DefaultMenuItem("Mein Profil", "ui-icon-wrench", "userProfile");  
+              network.addElement(item);  
               
-              item = new MenuItem();  
-              item.setValue("Meine Inserate");  
-              item.setOutcome("inserat");  
-              item.setIcon("ui-icon-calendar");
-              network.getChildren().add(item); 
+              item = new DefaultMenuItem("Meine Inserate","ui-icon-calendar", "inserat");  
+              network.getElements().add(item); 
               
-              item = new MenuItem();  
-              item.setValue("Neues Inserat");  
-              item.setOutcome("inserat");  
-              item.setIcon("ui-icon-note");
-              network.getChildren().add(item); 
+              item = new DefaultMenuItem("Neues Inserat", "ui-icon-note", "inserat");  
               
-              item = new MenuItem();  
-              item.setValue("Abmelden");  
-              Application app = FacesContext.getCurrentInstance().getApplication();
-              MethodExpression methodExpression = app.getExpressionFactory().createMethodExpression(
-             		         FacesContext.getCurrentInstance().getELContext(), "#{userHandler.logout}", null, new Class[] { });
-              item.setActionExpression(methodExpression);
-              item.setIcon("ui-icon-power");
-              item.setUpdate("messages");
+              item = new DefaultMenuItem("Abmelden", "ui-icon-power", "messages");  
+//              Application app = FacesContext.getCurrentInstance().getApplication();
+//              MethodExpression methodExpression = app.getExpressionFactory().createMethodExpression(
+//             		         FacesContext.getCurrentInstance().getELContext(), "#{userHandler.logout}", null, new Class[] { });
+              item.setCommand("#{userHandler.logout}");
               
-              network.getChildren().add(item); 
+              network.getElements().add(item); 
          } else {
-         	 item = new MenuItem();  
-              item.setValue("Anmelden");  
-              item.setOutcome("login");  
-              item.setIcon("ui-icon-key");
-              network.getChildren().add(item);  
-              
-              item = new MenuItem();  
-              item.setValue("Registrieren");  
-              item.setOutcome("registerProfile");  
-              item.setIcon("ui-icon-person");
-              network.getChildren().add(item); 
+			item = new DefaultMenuItem("Anmelden", "ui-icon-key", "login");
+			network.getElements().add(item);
+
+			item = new DefaultMenuItem("Registrieren", "ui-icon-person", "registerProfile");
+			network.getElements().add(item); 
          }
-         model.addSubmenu(network);  
+         model.addElement(network);  
          
-         model.addSeparator(new Separator());
+         model.addElement(new DefaultSeparator());
          
-         item = new MenuItem();  
-         item.setValue("Impressum");  
-         item.setOutcome("impressum");  
-         item.setIcon("ui-icon-contact");
-         model.addMenuItem(item);
+         item = new DefaultMenuItem("Impressum", "ui-icon-contact", "impressum");  
+         model.addElement(item);
          
         return model;  
     }     
