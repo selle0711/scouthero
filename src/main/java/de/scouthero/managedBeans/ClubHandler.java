@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import javax.transaction.UserTransaction;
 
@@ -20,7 +21,6 @@ import org.apache.log4j.Logger;
 import de.scouthero.beans.Club;
 import de.scouthero.beans.Team;
 import de.scouthero.beans.User;
-import de.scouthero.util.EMF;
 
 @ManagedBean
 @SessionScoped
@@ -29,6 +29,8 @@ public class ClubHandler {
 			
 	private List<Club> clubs;
 	private List<Team> teams;
+	
+//	@PersistenceUnit(name="default")
 	private EntityManager em;
 	private Club userClub ;  
 	
@@ -37,7 +39,7 @@ public class ClubHandler {
 	
 	public ClubHandler() {
 		logger.info("--> Club()");
-		em = EMF.createEntityManager();
+		
 	}
 	
 	@PostConstruct

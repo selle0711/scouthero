@@ -26,21 +26,14 @@ public class MenuBean {
          
          //First submenu  
     	 DefaultSubMenu submenu = new DefaultSubMenu("Navigation");  
-           
-    	 DefaultMenuItem item = new DefaultMenuItem("Home", "ui-icon-home", "index");  
-         submenu.addElement(item);  
+         submenu.addElement(new DefaultMenuItem("Home", "ui-icon-home", "/index"));  
          
          model.addElement(submenu);  
            
          //Second submenu  
          submenu = new DefaultSubMenu("Transfermarkt");  
-           
-         item = new DefaultMenuItem("Vereinssuche","ui-icon-search", "showClubs");  
-         
-         submenu.addElement(item);  
-           
-         item = new DefaultMenuItem("Spielersuche", "ui-icon-search", "showClubs");  
-         submenu.addElement(item);  
+         submenu.addElement(new DefaultMenuItem("Vereinssuche","ui-icon-search", "/showClubs"));  
+         submenu.addElement(new DefaultMenuItem("Spielersuche", "ui-icon-search", "/showClubs"));  
            
          model.addElement(submenu);  
 //         
@@ -55,15 +48,13 @@ public class MenuBean {
          
          DefaultSubMenu network = new DefaultSubMenu("Scouthero-Netzwerk");  
          if (userHandler != null && userHandler.getUser() != null && userHandler.isLoggedIn()) {
-         	 item = new DefaultMenuItem("Mein Profil", "ui-icon-wrench", "userProfile");  
-              network.addElement(item);  
+              network.addElement(new DefaultMenuItem("Mein Profil", "ui-icon-wrench", "/userProfile"));  
               
-              item = new DefaultMenuItem("Meine Inserate","ui-icon-calendar", "inserat");  
-              network.getElements().add(item); 
+              network.addElement( new DefaultMenuItem("Meine Inserate","ui-icon-calendar", "/inserat")); 
               
-              item = new DefaultMenuItem("Neues Inserat", "ui-icon-note", "inserat");  
+              network.addElement( new DefaultMenuItem("Neues Inserat", "ui-icon-note", "/inserat"));  
               
-              item = new DefaultMenuItem("Abmelden", "ui-icon-power", "messages");  
+              DefaultMenuItem item = new DefaultMenuItem("Abmelden", "ui-icon-power");  
 //              Application app = FacesContext.getCurrentInstance().getApplication();
 //              MethodExpression methodExpression = app.getExpressionFactory().createMethodExpression(
 //             		         FacesContext.getCurrentInstance().getELContext(), "#{userHandler.logout}", null, new Class[] { });
@@ -71,18 +62,14 @@ public class MenuBean {
               
               network.getElements().add(item); 
          } else {
-			item = new DefaultMenuItem("Anmelden", "ui-icon-key", "login");
-			network.getElements().add(item);
-
-			item = new DefaultMenuItem("Registrieren", "ui-icon-person", "registerProfile");
-			network.getElements().add(item); 
+			network.getElements().add(new DefaultMenuItem("Anmelden", "ui-icon-key", "/login"));
+			network.getElements().add(new DefaultMenuItem("Registrieren", "ui-icon-person", "/registerProfile")); 
          }
          model.addElement(network);  
          
          model.addElement(new DefaultSeparator());
          
-         item = new DefaultMenuItem("Impressum", "ui-icon-contact", "impressum");  
-         model.addElement(item);
+         model.addElement(new DefaultMenuItem("Impressum", "ui-icon-contact", "/impressum"));
          
         return model;  
     }     

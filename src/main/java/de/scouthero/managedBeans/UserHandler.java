@@ -2,6 +2,7 @@ package de.scouthero.managedBeans;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
@@ -9,13 +10,14 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FlowEvent;
 
 import de.scouthero.beans.User;
-import de.scouthero.util.EMF;
+import de.scouthero.services.UserServiceSB;
 import de.scouthero.util.StringWorks;
 
 @ManagedBean
@@ -23,7 +25,8 @@ import de.scouthero.util.StringWorks;
 public class UserHandler {
 	private static final Logger logger = Logger.getLogger(UserHandler.class);
 	
-	private EntityManager em;
+	@EJB
+	private UserServiceSB userService; 
 	
 	private User user;
 	private String login;
@@ -32,11 +35,10 @@ public class UserHandler {
 	private boolean skip;  
 	private boolean loginFailed = false;
 	private boolean loggedIn = false;
-	
+
 	public UserHandler() {
 		if (user == null)
 			user = new User();
-		em = EMF.createEntityManager();
 	}
 	
 	public String login() {
@@ -45,39 +47,48 @@ public class UserHandler {
 			setLogin(user.getLoginName());
 			setPassword(user.getPassword());
 		}
-			
 		try {
-			Query query = em.createNamedQuery("User.findByLoginAndPass");
-			query.setParameter("loginName", login);
-			if (user == null || user.getPassword() == null) { // in user.password is schon md5 drin 
-				logger.info(login+": hashing password: "+password);
-				query.setParameter("password", StringWorks.md5(password));
-				logger.info(login+": hashing password: "+password);
-			}
-			else
-				query.setParameter("password", password);
-			logger.info(StringWorks.md5(password));
-			
-			@SuppressWarnings("unchecked")
-			List<User> res = query.getResultList();
-			logger.info("Gefundene User: "+res.size());
-			if (res != null && res.size() == 1) {
-				user = res.get(0);
-				loginFailed = false;
-				loggedIn = true;
-				logger.info("login=true -> return: /index.xhtml?faces-redirect=true");
-				addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich angemeldet");
-				return "/index.xhtml?faces-redirect=true";
-			}
-			addMessage(FacesMessage.SEVERITY_ERROR, "Benutzer und Passwort stimmen nicht überein.");
-			loginFailed = true;
-			logger.info("login=false");
+			user = userService.getUserByNameAndPassword(login, StringWorks.md5(password));
+			loginFailed = false;
+			loggedIn = true;
+			addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich angemeldet");
+			return "/index.xhtml?faces-redirect=true";
 		} catch (Exception e) {
-//			ApplicationUtils.showErrorMessageInClient(e.getMessage(), registerButton,FacesContext.getCurrentInstance());
-			logger.error("",e);
-			addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
+			
 		}
 		return null;
+//		try {
+//			Query query = em.createNamedQuery("User.findByLoginAndPass");
+//			query.setParameter("loginName", login);
+//			if (user == null || user.getPassword() == null) { // in user.password is schon md5 drin 
+//				logger.info(login+": hashing password: "+password);
+//				query.setParameter("password", StringWorks.md5(password));
+//				logger.info(login+": hashing password: "+password);
+//			}
+//			else
+//				query.setParameter("password", password);
+//			logger.info(StringWorks.md5(password));
+//			
+//			@SuppressWarnings("unchecked")
+//			List<User> res = query.getResultList();
+//			logger.info("Gefundene User: "+res.size());
+//			if (res != null && res.size() == 1) {
+//				user = res.get(0);
+//				loginFailed = false;
+//				loggedIn = true;
+//				logger.info("login=true -> return: /index.xhtml?faces-redirect=true");
+//				addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich angemeldet");
+//				return "/index.xhtml?faces-redirect=true";
+//			}
+//			addMessage(FacesMessage.SEVERITY_ERROR, "Benutzer und Passwort stimmen nicht überein.");
+//			loginFailed = true;
+//			logger.info("login=false");
+//		} catch (Exception e) {
+////			ApplicationUtils.showErrorMessageInClient(e.getMessage(), registerButton,FacesContext.getCurrentInstance());
+//			logger.error("",e);
+//			addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
+//		}
+//		return null;
 	}
 	
 	public String logout() {
@@ -95,51 +106,47 @@ public class UserHandler {
 
 	public String register() {
 		// 1. schon daten in der DB?
-		Query query = em.createNamedQuery("User.findByEmailOrLogin");
-		query.setParameter("email", user.getEmail());
-		query.setParameter("loginName", user.getLoginName());
-		@SuppressWarnings("unchecked")
-		List<User> ll = query.getResultList();
-		if (ll == null || ll.isEmpty()) {
-			try {
-				logger.info("register new User: "+user.getLoginName()+" -> "+ user.getPassword());
-				// 2. ab in die DB
-				em.getTransaction().begin();
-				// md5 hashing
-				String md5Hash = StringWorks.md5(user.getPassword());
-				user.setPassword(md5Hash);
-				em.persist(user);
-				em.getTransaction().commit();
-				addMessage(FacesMessage.SEVERITY_INFO, "Registrierung war erfolgreich.");
-				return login();
-			} catch (Exception e) {
-				logger.error("",e);
-				em.getTransaction().setRollbackOnly();
-				addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
-			}
-		} else {
-			logger.error("user or mail already exists: "+user.getLoginName()+" / "+user.getEmail());
-			addMessage( FacesMessage.SEVERITY_ERROR, "Angegebene Benutzer oder Email-Adresse sind bereits vergeben.");
-
-		}
+//		Query query = em.createNamedQuery("User.findByEmailOrLogin");
+//		query.setParameter("email", user.getEmail());
+//		query.setParameter("loginName", user.getLoginName());
+//		@SuppressWarnings("unchecked")
+//		List<User> ll = query.getResultList();
+//		if (ll == null || ll.isEmpty()) {
+//			try {
+//				logger.info("register new User: "+user.getLoginName()+" -> "+ user.getPassword());
+//				// 2. ab in die DB
+//				em.getTransaction().begin();
+//				// md5 hashing
+//				String md5Hash = StringWorks.md5(user.getPassword());
+//				user.setPassword(md5Hash);
+//				em.persist(user);
+//				em.getTransaction().commit();
+//				addMessage(FacesMessage.SEVERITY_INFO, "Registrierung war erfolgreich.");
+//				return login();
+//			} catch (Exception e) {
+//				logger.error("",e);
+//				em.getTransaction().setRollbackOnly();
+//				addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
+//			}
+//		} else {
+//			logger.error("user or mail already exists: "+user.getLoginName()+" / "+user.getEmail());
+//			addMessage( FacesMessage.SEVERITY_ERROR, "Angegebene Benutzer oder Email-Adresse sind bereits vergeben.");
+//
+//		}
 		return null;		
 	}
 	
 	public void updateUser() throws Exception {
 		if (user == null)
 			throw new Exception("Kein User angemeldet");
-		em.getTransaction().begin();
-        em.merge(user);
-        em.getTransaction().commit();
+		userService.updateUser(user);
         addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich geändert");
 	}
 	
 	public String deleteUser() throws Exception {
 		if (user == null)
 			throw new Exception("Kein User angemeldet");
-		em.getTransaction().begin();
-        em.remove(user);
-        em.getTransaction().commit();
+		userService.deleteUser(user.getId());	
 		return logout();
 	}
 	
