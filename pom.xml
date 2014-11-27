@@ -30,6 +30,12 @@
 			<version>4.3.7.Final</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>4.3.7.Final</version>
@@ -70,11 +76,11 @@
 			<artifactId>jboss-jsf-api_2.2_spec</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-<dependency>
-	<groupId>org.jboss.spec.javax.ejb</groupId>
-	<artifactId>jboss-ejb-api_3.2_spec</artifactId>
-	<version>1.0.0.Final</version>
-</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
 
 	</dependencies>
 
@@ -88,31 +94,31 @@
 	</repositories>
 
 	<build>
-	<resources>
-		<resource>
-			<directory>src/main/resources</directory>
-		</resource>
-	</resources>
-	<plugins>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-war-plugin</artifactId>
-		<configuration>
-			
-			<webResources>
-				<resource>
-					<directory>src/main/resources/META-INF</directory>
-					<!-- override the destination directory for this resource -->
-					<targetPath>META-INF</targetPath>
-					<includes>
-						<include>persistence.xml</include>
-					</includes>
-				</resource>
-			</webResources>
-		</configuration>
-	</plugin>
-</plugins>
-</build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+
+					<webResources>
+						<resource>
+							<directory>src/main/resources/META-INF</directory>
+							<!-- override the destination directory for this resource -->
+							<targetPath>META-INF</targetPath>
+							<includes>
+								<include>persistence.xml</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<profiles>
 		<profile>

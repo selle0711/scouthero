@@ -1,28 +1,32 @@
 package de.scouthero.managedBeans;
 
-import java.util.List;
+import static de.scouthero.util.LogUtil.debugEnter;
+import static de.scouthero.util.LogUtil.debugExit;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FlowEvent;
 
 import de.scouthero.beans.User;
 import de.scouthero.services.UserServiceSB;
+import de.scouthero.util.ScoutheroException;
 import de.scouthero.util.StringWorks;
+import de.scouthero.util.ScoutheroException.ERROR;
 
-@ManagedBean
+/**
+ * 
+ * @author Selle
+ *
+ */
 @SessionScoped
-public class UserHandler {
+@ManagedBean
+public class UserHandler extends AbstractHandler {
 	private static final Logger logger = Logger.getLogger(UserHandler.class);
 	
 	@EJB
@@ -37,64 +41,47 @@ public class UserHandler {
 	private boolean loggedIn = false;
 
 	public UserHandler() {
-		if (user == null)
-			user = new User();
+		
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String login() {
-		logger.info("--> login()");
-		if (user != null && user.getLoginName() != null) {
-			setLogin(user.getLoginName());
-			setPassword(user.getPassword());
-		}
+		final String methodName="login()";
+		debugEnter(logger, methodName);
+		
 		try {
 			user = userService.getUserByNameAndPassword(login, StringWorks.md5(password));
 			loginFailed = false;
 			loggedIn = true;
 			addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich angemeldet");
-			return "/index.xhtml?faces-redirect=true";
+			debugExit(logger, methodName);
+			return "index.xhtml?faces-redirect=true";
+		} catch (ScoutheroException e) {
+			if (e.getErrorCode() == ERROR.ENTITY_NOT_FOUND) {
+				addMessage(FacesMessage.SEVERITY_ERROR, "Keine Übereinstimmung gefunden. Entweder Sie versuchen die Anmeldung erneut, oder Sie nutzen die Passwort vergessen-Funktion.");
+			}
 		} catch (Exception e) {
-			
+			addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage()); 
 		}
 		return null;
-//		try {
-//			Query query = em.createNamedQuery("User.findByLoginAndPass");
-//			query.setParameter("loginName", login);
-//			if (user == null || user.getPassword() == null) { // in user.password is schon md5 drin 
-//				logger.info(login+": hashing password: "+password);
-//				query.setParameter("password", StringWorks.md5(password));
-//				logger.info(login+": hashing password: "+password);
-//			}
-//			else
-//				query.setParameter("password", password);
-//			logger.info(StringWorks.md5(password));
-//			
-//			@SuppressWarnings("unchecked")
-//			List<User> res = query.getResultList();
-//			logger.info("Gefundene User: "+res.size());
-//			if (res != null && res.size() == 1) {
-//				user = res.get(0);
-//				loginFailed = false;
-//				loggedIn = true;
-//				logger.info("login=true -> return: /index.xhtml?faces-redirect=true");
-//				addMessage(FacesMessage.SEVERITY_INFO, "Benutzer erfolgreich angemeldet");
-//				return "/index.xhtml?faces-redirect=true";
-//			}
-//			addMessage(FacesMessage.SEVERITY_ERROR, "Benutzer und Passwort stimmen nicht überein.");
-//			loginFailed = true;
-//			logger.info("login=false");
-//		} catch (Exception e) {
-////			ApplicationUtils.showErrorMessageInClient(e.getMessage(), registerButton,FacesContext.getCurrentInstance());
-//			logger.error("",e);
-//			addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
-//		}
-//		return null;
+
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String logout() {
+		final String methodName = "logout()";
+		debugEnter(logger, methodName);
+		user = null;
+		loggedIn = false;
 		addMessage( FacesMessage.SEVERITY_INFO, "Benutzer wurde erfolgreich abgemeldet");
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "/index.xhtml?faces-redirect=true";
+		return "index.xhtml?faces-redirect=true";
 	}
 	
 	public void checkLoggedIn(ComponentSystemEvent cse) {
@@ -269,8 +256,4 @@ public class UserHandler {
 	public String getType() {
 		return user!=null && user.getType() == 1? "Spieleraccount":"Vereinsaccount";
 	}
-	private void addMessage(Severity severity, String summary) {  
-        FacesMessage message = new FacesMessage(severity, summary,  null);  
-        FacesContext.getCurrentInstance().addMessage(null, message);  
-    }  
 }

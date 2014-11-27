@@ -1,19 +1,15 @@
 package 	de.scouthero.managedBeans;
 import static de.scouthero.util.LogUtil.debugEnter;
-import static de.scouthero.util.LogUtil.debugExit;
 
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-import org.picketbox.util.StringUtil;
 
 import de.scouthero.beans.Club;
 import de.scouthero.beans.Team;
@@ -21,7 +17,7 @@ import de.scouthero.services.ClubService;
 
 @ManagedBean
 @SessionScoped
-public class ClubHandler {
+public class ClubHandler extends AbstractHandler{
 	private final static Logger logger = Logger.getLogger(ClubHandler.class);
 			
 	private List<Club> clubs;
@@ -49,11 +45,6 @@ public class ClubHandler {
 			addMessage(FacesMessage.SEVERITY_FATAL, e.getMessage());
 		}
 	}
-	
-	private void addMessage(Severity severity, String summary) {  
-        FacesMessage message = new FacesMessage(severity, summary,  null);  
-        FacesContext.getCurrentInstance().addMessage("messages", message);  
-    }  
 	
 	/* AB HIER NUR GETTER UND SETTER */
 	

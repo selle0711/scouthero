@@ -31,9 +31,6 @@ public class ClubServiceBean implements ClubService {
 		final String methodName = "createClub()";
 		debugEnter(logger, methodName, "params: %s", myClub);
 		
-		Club newClub = new Club();
-//		newClub.set
-		
 		return null;
 	}
 	

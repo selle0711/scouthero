@@ -2,7 +2,6 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui">
 	
 	<h:head>
@@ -26,13 +25,14 @@
 			        <p:submenu label="#{msg['menue.transfermarkt']}">
 			            <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
 			            <p:menuitem value="#{msg['menue.spielersuche']}" outcome="showPlayers.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{userHandler.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
 			        </p:submenu>
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{!userHandler.loggedIn}">
 			            <p:menuitem value="#{msg['menue.login']}" url="login.xhtml" update="subContent" ajax="true" icon="ui-icon-key"/>
 			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
 			        </p:submenu>
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{userHandler.loggedIn}">
-			            <p:menuitem value="#{msg['menue.logoff']}" url="http://www.primefaces.org" icon="ui-icon-home"/>
+			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{userHandler.logout}" icon="ui-icon-home"/>
 			        </p:submenu>
 			    </p:menu>
 				  

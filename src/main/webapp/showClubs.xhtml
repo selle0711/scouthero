@@ -6,7 +6,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
@@ -15,15 +14,15 @@
 		xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:h="http://java.sun.com/jsf/html"
 		xmlns:ui="http://java.sun.com/jsf/facelets">
-		
+
 		<ui:define name="breadcrumb">
-			<p:breadCrumb>  
-			    <p:menuitem value="#{msg['menue.home']}" outcome="index" />  
-			     <p:menuitem value="#{msg['menue.transfermarkt']}" url="#" />
-			      <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs" />
-			</p:breadCrumb> 
-		</ui:define>	
-		
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.transfermarkt']}" url="#" />
+				<p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs" />
+			</p:breadCrumb>
+		</ui:define>
+
 		<ui:define name="content">
 			<h:form id="vereinssuche">
 				<p:panel header="#{msg['menue.vereinssuche']}" styleClass="contentPanel">
@@ -34,13 +33,13 @@
 						
 						<p:dataTable id="dataTable" value="#{clubHandler.clubs}"
 							sortMode="multiple" var="club" rowClasses="odd, even"
-							widgetVar="dataTable"
+							widgetVar="widget"
 							headerClass="header" footerClass="footer" styleClass="content">
 							<f:facet name="header">
 								<p:outputPanel>
 									<h:outputText value="Search all fields:" />
 									<p:inputText id="globalFilter"
-										onkeyup="PF('dataTable').filter()" style="width:150px"
+										onkeyup="PF('widget').filter()" style="width:150px"
 										placeholder="Enter keyword" />
 								</p:outputPanel>
 							</f:facet>
