@@ -18,8 +18,24 @@
 		</div>
 		<div id="leftPanel">
 			<h:form>
-				<p:growl id="messages"/>  
-				<p:menu model="#{menuBean.model}"/>  
+				<p:growl id="messages"/> 			
+				 <p:menu toggleable="true">
+			        <p:submenu label="#{msg['menue.navigation']}">
+			            <p:menuitem value="#{msg['menue.home']}" outcome="index.xhtml" updare="subContent" ajax="true" icon="ui-icon-home" />
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.transfermarkt']}">
+			            <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			            <p:menuitem value="#{msg['menue.spielersuche']}" outcome="showPlayers.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{!userHandler.loggedIn}">
+			            <p:menuitem value="#{msg['menue.login']}" url="login.xhtml" update="subContent" ajax="true" icon="ui-icon-key"/>
+			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{userHandler.loggedIn}">
+			            <p:menuitem value="#{msg['menue.logoff']}" url="http://www.primefaces.org" icon="ui-icon-home"/>
+			        </p:submenu>
+			    </p:menu>
+				  
 				<br/>
 
 				<p:panel rendered="#{userHandler.loggedIn}" header="#{userHandler.type}">
@@ -44,7 +60,6 @@
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-wrench" />
 						</h:commandLink>
-						
 					</f:facet>
 				</p:panel>
 			</h:form>

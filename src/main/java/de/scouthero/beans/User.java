@@ -19,8 +19,8 @@ import javax.persistence.Temporal;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "User.findByEmailOrLogin", query = "from User u where u.email = :email or u.loginName = :loginName"),
-		@NamedQuery(name = "User.findByLoginAndPass", query = "from User u where u.loginName = :loginName and u.password = :password") })
+		@NamedQuery(name = "User.findByEmailOrLogin", query = "select u from User u where u.email = :email or u.loginName = :loginName"),
+		@NamedQuery(name = "User.findByLoginAndPass", query = "select u from User u where u.loginName = :loginName and u.password = :password") })
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 6916366206935470020L;

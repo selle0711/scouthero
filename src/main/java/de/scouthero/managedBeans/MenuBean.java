@@ -26,21 +26,17 @@ public class MenuBean {
          
          //First submenu  
     	 DefaultSubMenu submenu = new DefaultSubMenu("Navigation");  
-         submenu.addElement(new DefaultMenuItem("Home", "ui-icon-home", "/index"));  
+         submenu.addElement(new DefaultMenuItem("Home", "ui-icon-home", "index.xhtml"));  
          
          model.addElement(submenu);  
            
          //Second submenu  
          submenu = new DefaultSubMenu("Transfermarkt");  
-         submenu.addElement(new DefaultMenuItem("Vereinssuche","ui-icon-search", "/showClubs"));  
-         submenu.addElement(new DefaultMenuItem("Spielersuche", "ui-icon-search", "/showClubs"));  
+         submenu.addElement(new DefaultMenuItem("Vereinssuche","ui-icon-search", "showClubs.xhtml"));  
+         submenu.addElement(new DefaultMenuItem("Spielersuche", "ui-icon-search", "showPlayers.xhtml"));  
            
          model.addElement(submenu);  
-//         
-//         FacesContext ctx = FacesContext.getCurrentInstance();
-//         HttpSession session = (HttpSession)ctx.getExternalContext().getSession(true);
-//         UserHandler userHandler = (UserHandler)session.getAttribute("userHandler");
-//         
+
          ELResolver el = FacesContext.getCurrentInstance()
          	      .getApplication().getELResolver();
          UserHandler userHandler = (UserHandler) el.getValue(FacesContext.getCurrentInstance()
@@ -55,9 +51,6 @@ public class MenuBean {
               network.addElement( new DefaultMenuItem("Neues Inserat", "ui-icon-note", "/inserat"));  
               
               DefaultMenuItem item = new DefaultMenuItem("Abmelden", "ui-icon-power");  
-//              Application app = FacesContext.getCurrentInstance().getApplication();
-//              MethodExpression methodExpression = app.getExpressionFactory().createMethodExpression(
-//             		         FacesContext.getCurrentInstance().getELContext(), "#{userHandler.logout}", null, new Class[] { });
               item.setCommand("#{userHandler.logout}");
               
               network.getElements().add(item); 

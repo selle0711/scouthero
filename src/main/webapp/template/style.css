@@ -94,6 +94,7 @@ table.content{
 	border-size: 1px;
 	border-style: solid;
 	margin-left: 200px;
+	margin-top: 20px;
 }
 
 table.content tr{
@@ -129,6 +130,11 @@ label {
 p {
 	text-align:left;
 	padding-left: 10px;
+}
+
+input.searchInputField {
+	width: 250px;
+	background-color: red;
 }
 
 .error {

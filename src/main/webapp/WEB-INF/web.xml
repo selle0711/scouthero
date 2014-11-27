@@ -25,7 +25,5 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
 	</servlet-mapping>
-	<listener>
-		<listener-class>de.scouthero.util.EMF</listener-class>
-	</listener>
+	
 </web-app>

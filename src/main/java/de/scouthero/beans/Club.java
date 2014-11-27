@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "Club.findAll", query = "select c from Club c"),
+		@NamedQuery(name = "Club.findBySearchString", query ="select c from Club c where c.city like :searchString "),
 		@NamedQuery(name = "Club.findByUser", query = "select c from Club c where c.user=:user") })
 public class Club implements Serializable {
 
