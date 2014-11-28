@@ -7,12 +7,15 @@ import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Club;
+import de.scouthero.beans.User;
+import de.scouthero.util.ScoutheroException;
 
 @Stateless
 @Local(ClubService.class)
@@ -62,4 +65,42 @@ public class ClubServiceBean implements ClubService {
 		debugExit(logger, methodName, "clubs=", clubs);
 		return null;
 	}
+
+	/**
+	 * @param user
+	 * @return Vereine des angemeldeten Benutzers
+	 */
+	public List<Club> getUserClubs(User user) throws ScoutheroException {
+		final String methodName = "getUserClubs()";
+		debugEnter(logger, methodName, "params:", user);
+		TypedQuery<Club> query = em.createNamedQuery("Club.findByUser", Club.class);
+		query.setParameter("user", user);
+		try {
+			return query.getResultList();
+		} catch (NoResultException e) {
+			throw new ScoutheroException(e);
+		}
+	}
+
+	/**
+	 * Legt den Club an (falls ID noch nich gefüllt) und speichert die Änderungen
+	 * 
+	 * @param selectedUserClub
+	 * @param user
+	 * @throws ScoutheroException
+	 */
+	public void saveClub(Club selectedUserClub, User user) throws ScoutheroException {
+		final String methodName = "saveClub()";
+		debugEnter(logger, methodName, "params: ", selectedUserClub, user);
+		try {
+			if (selectedUserClub.getId() == null) {
+				selectedUserClub.setUser(user);
+				em.persist(selectedUserClub);
+			} else {
+				em.merge(selectedUserClub);
+			}
+		} catch (Exception e) {
+			throw new ScoutheroException(e);
+		}
+	} 
 }

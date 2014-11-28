@@ -3,34 +3,44 @@ package de.scouthero.managedBeans;
 import static de.scouthero.util.LogUtil.debugEnter;
 import static de.scouthero.util.LogUtil.debugExit;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
+import de.scouthero.beans.Club;
 import de.scouthero.beans.User;
+import de.scouthero.services.ClubService;
 import de.scouthero.services.UserServiceSB;
 import de.scouthero.util.ScoutheroException;
-import de.scouthero.util.StringWorks;
 import de.scouthero.util.ScoutheroException.ERROR;
+import de.scouthero.util.StringWorks;
 
 /**
  * 
  * @author Selle
  *
  */
-@SessionScoped
+@ViewScoped
 @ManagedBean
 public class UserHandler extends AbstractHandler {
+	private static final long serialVersionUID = -8432316080384576474L;
+
 	private static final Logger logger = Logger.getLogger(UserHandler.class);
 	
 	@EJB
 	private UserServiceSB userService; 
+	@EJB
+	private ClubService clubService;
 	
 	private User user;
 	private String login;
@@ -39,9 +49,26 @@ public class UserHandler extends AbstractHandler {
 	private boolean skip;  
 	private boolean loginFailed = false;
 	private boolean loggedIn = false;
+	
+	private Club selectedUserClub;
+	private boolean showClubPanel = false;
 
+	private List<Club> userClubs;
+	
 	public UserHandler() {
-		
+		loadUserClubs();
+	}
+	
+	private void loadUserClubs() {
+		final String methodName = "getUserClubs()";
+		debugEnter(logger, methodName);
+		if (user != null) {
+			try {
+				userClubs = clubService.getUserClubs(user);
+			} catch (ScoutheroException e) {
+				logger.error("", e);
+			}
+		}
 	}
 	
 	/**
@@ -89,6 +116,42 @@ public class UserHandler extends AbstractHandler {
 		if (user == null || user.getLoginName() == null) {
 			context.getApplication().getNavigationHandler().handleNavigation(context, null, "/login.xhtml?faces-redirect=true");
 		}
+	}
+	
+	
+	public void createNewClub() {
+		final String methodName = "createNewClub()";
+		debugEnter(logger, methodName);
+		selectedUserClub = new Club();
+		showClubPanel = true;
+	}
+	public void changeClub() {
+		final String methodName = "changeClub()";
+		debugEnter(logger, methodName);
+		showClubPanel = true;
+	}
+	
+	public void onClubRowSelect(SelectEvent event) {
+		final String methodName = "onClubRowSelect()";
+		debugEnter(logger, methodName);
+    }
+ 
+    public void onClubRowUnSelect(UnselectEvent event) {
+    	final String methodName = "onClubRowUnSelect()";
+		debugEnter(logger, methodName);
+    }
+	
+	public void saveClub() {
+		final String methodName = "saveClub()";
+		debugEnter(logger, methodName);
+		if (selectedUserClub != null && user != null) {
+			try {
+				clubService.saveClub(selectedUserClub, user);
+			} catch (ScoutheroException e) {
+				addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			}
+		}
+		showClubPanel = false;
 	}
 
 	public String register() {
@@ -255,5 +318,23 @@ public class UserHandler extends AbstractHandler {
 
 	public String getType() {
 		return user!=null && user.getType() == 1? "Spieleraccount":"Vereinsaccount";
+	}
+
+	public Club getSelectedUserClub() {
+		return selectedUserClub;
+	}
+
+	public void setSelectedUserClub(Club selectedUserClub) {
+		this.selectedUserClub = selectedUserClub;
+	}
+	
+	public boolean getShowClubPanel(){
+		return showClubPanel;
+	}
+	public void setShowClubPanel(boolean b) {
+		showClubPanel = b;
+	}
+	public List<Club> getUserClub() {
+		return userClubs;
 	}
 }

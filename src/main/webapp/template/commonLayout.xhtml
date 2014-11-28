@@ -32,7 +32,8 @@
 			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
 			        </p:submenu>
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{userHandler.loggedIn}">
-			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{userHandler.logout}" icon="ui-icon-home"/>
+			        	<p:menuitem value="#{msg['menue.myClub']}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
+			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{userHandler.logout}" icon="ui-icon-power"/>
 			        </p:submenu>
 			    </p:menu>
 				  

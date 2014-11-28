@@ -240,5 +240,15 @@ public class User implements Serializable {
 	public void setAdditionalInfo(String additionalInfo) {
 		this.additionalInfo = additionalInfo;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", loginName=" + loginName + ", password="
+				+ password + ", email=" + email + ", name=" + name
+				+ ", firstName=" + firstName + ", type=" + type + ", age="
+				+ age + ", postalCode=" + postalCode + ", city=" + city
+				+ ", phone=" + phone + ", additionalInfo=" + additionalInfo
+				+ ", registerDate=" + registerDate + "]";
+	}
 	
 }

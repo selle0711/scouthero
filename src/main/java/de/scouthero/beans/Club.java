@@ -166,4 +166,11 @@ public class Club implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	@Override
+	public String toString() {
+		return "Club [id=" + id + ", type=" + type + ", description="
+				+ description + ", name=" + name + ", city=" + city + ", plz="
+				+ plz + ", street=" + street + ", teams=" + teams + "]";
+	}
 }

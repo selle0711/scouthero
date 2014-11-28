@@ -17,11 +17,16 @@ public class ScoutheroException extends Exception {
 	
 	public enum ERROR {
 		ENTITY_NOT_FOUND,
+		NO_USER,
 	}
 	
 
 	public ScoutheroException(String message) {
 		super(message);
+	}
+	
+	public ScoutheroException(ERROR myCode) {
+		errorCode = myCode;
 	}
 	
 	public ScoutheroException(Exception e) {
