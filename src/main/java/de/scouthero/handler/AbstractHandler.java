@@ -1,4 +1,4 @@
-package de.scouthero.managedBeans;
+package de.scouthero.handler;
 
 import java.io.Serializable;
 
@@ -21,4 +21,6 @@ public abstract class AbstractHandler implements Serializable{
         FacesMessage message = new FacesMessage(severity, summary,  null);  
         FacesContext.getCurrentInstance().addMessage("messages", message);  
     }  
+	
+	
 }

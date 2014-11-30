@@ -25,25 +25,25 @@
 			        <p:submenu label="#{msg['menue.transfermarkt']}">
 			            <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
 			            <p:menuitem value="#{msg['menue.spielersuche']}" outcome="showPlayers.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
-			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{userHandler.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
+			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
 			        </p:submenu>
-			        <p:submenu label="#{msg['menue.network']}" rendered="#{!userHandler.loggedIn}">
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{!login.loggedIn}">
 			            <p:menuitem value="#{msg['menue.login']}" url="login.xhtml" update="subContent" ajax="true" icon="ui-icon-key"/>
 			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
 			        </p:submenu>
-			        <p:submenu label="#{msg['menue.network']}" rendered="#{userHandler.loggedIn}">
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{login.loggedIn}">
 			        	<p:menuitem value="#{msg['menue.myClub']}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
-			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{userHandler.logout}" icon="ui-icon-power"/>
+			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{login.logout}" icon="ui-icon-power"/>
 			        </p:submenu>
 			    </p:menu>
 				  
 				<br/>
 
-				<p:panel rendered="#{userHandler.loggedIn}" header="#{userHandler.type}">
+				<p:panel rendered="#{login.loggedIn}" header="#{login.type}">
 					<h:panelGrid columns="2">
 						
 						<h:outputText styleClass="ui-icon  ui-icon-person" />
-						<p:outputLabel value="#{userHandler.user.firstName} #{userHandler.user.name}" /> 
+						<p:outputLabel value="#{login.user.firstName} #{login.user.name}" /> 
 						
 						<h:outputText styleClass="ui-icon  ui-icon-mail-closed" />
 						<p:outputLabel value="0 Nachrichten"/>
@@ -53,7 +53,7 @@
 					</h:panelGrid>
 					
 					<f:facet name="actions">
-						<h:commandLink action="#{userHandler.logout}"
+						<h:commandLink action="#{login.logout}"
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-power" />
 						</h:commandLink>

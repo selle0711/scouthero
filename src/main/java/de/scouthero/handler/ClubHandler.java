@@ -1,4 +1,5 @@
-package 	de.scouthero.managedBeans;
+package de.scouthero.handler;
+
 import static de.scouthero.util.LogUtil.debugEnter;
 
 import java.util.List;
@@ -7,27 +8,24 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Club;
-import de.scouthero.beans.Team;
 import de.scouthero.services.ClubService;
 
+@ViewScoped
 @ManagedBean
-@SessionScoped
 public class ClubHandler extends AbstractHandler{
+
 	private final static Logger logger = Logger.getLogger(ClubHandler.class);
-			
-	private List<Club> clubs;
-	private List<Team> teams;
-	private String searchString;
-	
-	private Club userClub ;
+	private static final long serialVersionUID = 6945876997863030103L;
 	
 	@EJB
 	private ClubService clubService;
+	
+	private List<Club> clubs;
 	
 	public ClubHandler() {
 		logger.info("--> Club()");
@@ -46,29 +44,7 @@ public class ClubHandler extends AbstractHandler{
 		}
 	}
 	
-	/* AB HIER NUR GETTER UND SETTER */
-	
-	public List<Team> getUserTeams() { 
-		return this.teams;
-	}
-	
-
 	public List<Club> getClubs() {
 		return this.clubs;
-	}
-
-	public Club getUserClub() {
-		return userClub;
-	}
-
-	public void setUserClub(Club currentClub) {
-		this.userClub = currentClub;
-	}
-	public String getSearchString() {
-		return searchString;
-	}
-
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
 	}
 }

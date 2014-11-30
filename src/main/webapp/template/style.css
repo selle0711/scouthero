@@ -151,6 +151,7 @@ input.searchInputField {
 	margin-left:100px;
 	width: 80%;
 	min-height: 600px;
+	text-align:left;
 }
 
 .loginPanel {

@@ -100,6 +100,7 @@ public class ClubServiceBean implements ClubService {
 				em.merge(selectedUserClub);
 			}
 		} catch (Exception e) {
+			logger.error("", e);
 			throw new ScoutheroException(e);
 		}
 	} 
