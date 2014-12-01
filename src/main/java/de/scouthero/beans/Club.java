@@ -169,8 +169,6 @@ public class Club implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Club [id=" + id + ", type=" + type + ", description="
-				+ description + ", name=" + name + ", city=" + city + ", plz="
-				+ plz + ", street=" + street + ", teams=" + teams + "]";
+		return "Club [id=" + id + ", name=" + name + "]";
 	}
 }

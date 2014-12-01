@@ -23,7 +23,7 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "Team.findAll", query = "select t from Team t"),
-	@NamedQuery(name = "Team.findByUser", query = "select t from Team t where t.club.user=:user") })
+	@NamedQuery(name = "Team.findByClub", query = "select t from Team t where t.club=:club") })
 public class Team implements Serializable{
 
 	private static final long serialVersionUID = 3433501125497745800L;

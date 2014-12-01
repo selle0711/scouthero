@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Club;
+import de.scouthero.beans.Team;
 import de.scouthero.beans.User;
 import de.scouthero.util.ScoutheroException;
 
@@ -89,7 +90,7 @@ public class ClubServiceBean implements ClubService {
 	 * @param user
 	 * @throws ScoutheroException
 	 */
-	public void saveClub(Club selectedUserClub, User user) throws ScoutheroException {
+	public void saveClub(final Club selectedUserClub, final User user) throws ScoutheroException {
 		final String methodName = "saveClub()";
 		debugEnter(logger, methodName, "params: ", selectedUserClub, user);
 		try {
@@ -103,5 +104,26 @@ public class ClubServiceBean implements ClubService {
 			logger.error("", e);
 			throw new ScoutheroException(e);
 		}
+	}
+
+	/**
+	 * Liefert alle Mannschaften eines Vereins
+	 * @param selectedUserClub
+	 * @return List
+	 * @throws ScoutHeroException
+	 */
+	public List<Team> getClubTeams(final Club selectedUserClub) throws ScoutheroException {
+		final String methodName = "getClubTeams()";
+		debugEnter(logger, methodName, "params: ", selectedUserClub);
+		List<Team> teams = null;
+		try {
+			TypedQuery<Team> query = em.createNamedQuery("Team.findByClub", Team.class);
+			query.setParameter("club", selectedUserClub);
+			teams = query.getResultList();
+		} catch (Exception e) {
+			throw new ScoutheroException(e);
+		}
+		debugExit(logger, methodName, "teams=", teams);
+		return teams;
 	} 
 }

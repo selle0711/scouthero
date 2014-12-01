@@ -31,15 +31,12 @@
 					</div>
 					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 					
-					<p:dataTable id="clubsDT" var="club" value="#{myClubHandler.userClub}" selection="#{myClubHandler.selectedUserClub}" rowKey="#{club.id}">
-						<f:facet name="header">
-				            Select Events
-				        </f:facet>
+					<p:dataTable id="clubsDT" var="club" value="#{myClubHandler.userClub}" selectionMode="single" selection="#{myClubHandler.selectedUserClub}" rowKey="#{club.id}" emptyMessage="#{msg.emptyData}">
+						<p:ajax event="rowSelect" listener="#{myClubHandler.onClubRowSelect}" update=":userClub" />
+        				<p:ajax event="rowUnselect" listener="#{myClubHandler.onClubRowUnSelect}" update=":userClub" />
 				        <f:facet name="footer">
-				            <h:commandButton id="new" value="NEU" actionListener="#{myClubHandler.createNewClub}" update="clubPanel" />
+				            <p:commandButton id="new" value="NEU" actionListener="#{myClubHandler.createNewClub}" update=":userClub:clubPanel" />
 				        </f:facet>
-				        <p:ajax event="rowSelect" listener="#{myClubHandler.onClubRowSelect}" update="" />
-        				<p:ajax event="rowUnselect" listener="#{myClubHandler.onClubRowUnSelect}" update="" /> 
 						<p:column headerText="#{msg['txt.userClub.name']}">
 				            <h:outputText value="#{club.name}" />
 				        </p:column>
@@ -49,20 +46,53 @@
 				        <p:column headerText="#{msg['txt.userClub.city']}">
 				            <h:outputText value="#{club.city}" />
 				        </p:column>	
+				        <p:column headerText="#{msg['txt.userClub.actions']}">
+				        	<p:commandButton title="#{msg['txt.userClub.actions.add']}" icon="ui-icon-plus" action="#{myClubHandler.showTeamPanel(club)}" update=":userClub:teamPanel"/>
+				        	<p:commandButton title="#{msg['txt.userClub.actions.edit']}" icon="ui-icon-pencil" action="#{myClubHandler.onClubEdit(club)}" update=":userClub:clubPanel"/>
+				        	<p:commandButton title="#{msg['txt.userClub.actions.del']}" icon="ui-icon-trash"/>
+				        </p:column>
 				        
 					</p:dataTable>
 					
 					<p:panel id="clubPanel" rendered="#{myClubHandler.showClubPanel}" header="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.newClub'] : msg['txt.userClub.editClub']}">
 						<h:panelGrid columns="1">
-							<p:inputText value="#{userHandler.selectedUserClub.name}" placeholder="#{msg['txt.userClub.name']}" rendered="true"/>
-							<p:inputText value="#{userHandler.selectedUserClub.type}" placeholder="#{msg['txt.userClub.type']}" />
-							<p:inputText value="#{userHandler.selectedUserClub.street}" placeholder="#{msg['txt.userClub.street']}"  rendered="true"/>
-							<p:inputText value="#{userHandler.selectedUserClub.plz}" placeholder="#{msg['txt.userClub.plz']}"  rendered="true" />
-							<p:inputText value="#{userHandler.selectedUserClub.city}" placeholder="#{msg['txt.userClub.city']}"  rendered="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.name}" placeholder="#{msg['txt.userClub.name']}" rendered="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.type}" placeholder="#{msg['txt.userClub.type']}" />
+							<p:inputText value="#{myClubHandler.selectedUserClub.street}" placeholder="#{msg['txt.userClub.street']}"  rendered="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.plz}" placeholder="#{msg['txt.userClub.plz']}"  rendered="true" />
+							<p:inputText value="#{myClubHandler.selectedUserClub.city}" placeholder="#{msg['txt.userClub.city']}"  rendered="true"/>
 							<p:inputTextarea rows="10" cols="150" value="#{myClubHandler.selectedUserClub.description}" placeholder="#{msg['txt.userClub.descr']}" />
-							<h:commandButton action="#{myClubHandler.saveClub}" value="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.persist'] : msg['txt.userClub.edit']}"  update="messages"/>
+							<p:commandButton actionListener="#{myClubHandler.saveClub2()}" value="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.persist'] : msg['txt.userClub.edit']}"  update="messages :userClub"/>
 						</h:panelGrid>
 					</p:panel> 
+					
+					<p:panel id="teamPanel" header="#{msg['txt.userClub.teams']}" rendered="#{myClubHandler.showTeamPanel}" >
+						<p:dataTable id="teamsDT" var="team" value="#{myClubHandler.userTeams}" selectionMode="single" selection="#{myClubHandler.selectedUserTeam}" rowKey="#{team.id}" emptyMessage="#{msg.emptyData}">
+							<p:ajax event="rowSelect" listener="#{myClubHandler.onTeamRowSelect}" update=":userClub" />
+	        				<p:ajax event="rowUnselect" listener="#{myClubHandler.onTeamRowUnSelect}" update=":userClub" />
+					        <f:facet name="footer">
+					            <p:commandButton id="new" value="NEU" actionListener="#{myClubHandler.createNewTeam}" update=":userClub" />
+					        </f:facet>
+							<p:column headerText="#{msg['txt.userClub.name']}">
+					            <h:outputText value="#{team.name}" />
+					        </p:column>
+					       
+					        <p:column headerText="#{msg['txt.userClub.actions']}">
+					        	<p:commandButton title="#{msg['txt.userClub.actions.add']}" icon="ui-icon-plus" action="#{myClubHandler.showTeamPanel(team)}" update=":userClub:teamPanel"/>
+					        	<p:commandButton title="#{msg['txt.userClub.actions.edit']}" icon="ui-icon-pencil" action="#{myClubHandler.onClubEdit(team)}" update=":userClub:teamPanel"/>
+					        	<p:commandButton title="#{msg['txt.userClub.actions.del']}" icon="ui-icon-trash"/>
+					        </p:column>
+						</p:dataTable>
+					
+						<p:panel id="teamEditPanel" rendered="#{myClubHandler.showTeamEditPanel}" header="#{myClubHandler.selectedUserTeam.id == null ? msg['txt.userClub.newTeam'] : msg['txt.userClub.editTeam']}">
+							<h:panelGrid columns="1">
+								<p:inputText value="#{myClubHandler.selectedUserTeam.name}" placeholder="#{msg['txt.userClub.name']}" rendered="true"/>
+								<p:inputTextarea rows="10" cols="150" value="#{myClubHandler.selectedUserTeam.description}" placeholder="#{msg['txt.userClub.descr']}" />
+								<h:commandButton actionListener="#{myClubHandler.saveTeam()}" value="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.persist'] : msg['txt.userClub.edit']}"  update="messages :userClub"/>
+							</h:panelGrid>
+						</p:panel>
+						
+					</p:panel>
 				</p:panel>
 			</h:form>
 		</ui:define>
