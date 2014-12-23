@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+		
+		
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.transfermarkt']}" url="#" />
+				<p:menuitem value="#{msg['menue.inseratSearch']}" outcome="inseratSearch" />
+			</p:breadCrumb>
+		</ui:define>
+		
+		<ui:define name="content">
+			<h:form id="inseratForm">
+				<p:panel header="#{msg['txt.inseratSearch.header']}" styleClass="contentPanel">
+					<div style="text-align: left; margin-bottom: 10px">
+						<p:outputLabel value="#{msg['txt.inseratSearch.global']}"/>
+					</div>
+					
+					<p:accordionPanel >
+				        <p:tab title="Suchoptionen">
+				            <h:panelGrid columns="2" cellpadding="10">
+				                <h:outputText
+				                    value="The story begins as Don Vito Corleone..." />
+				            </h:panelGrid>
+				        </p:tab>
+			        </p:accordionPanel>
+					
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+					
+					<p:dataTable id="dataTable" value="#{inseratSearchHandler.inserate}"
+							sortMode="multiple" var="inserat" rowClasses="odd, even"
+							widgetVar="widget"
+							headerClass="header" footerClass="footer" styleClass="content"
+							selectionMode="single" selection="#{inseratSearchHandler.selectedInserat}" rowKey="#{inserat.id}" emptyMessage="#{msg.emptyData}">
+							<p:ajax event="rowSelect" listener="#{inseratSearchHandler.onRowSelect}" onsuccess="PF('dlg').show();" update=":inseratForm" />
+        					<p:ajax event="rowUnselect" listener="#{inseratSearchHandler.onRowUnSelect}" update=":inseratForm" />
+							<f:facet name="footer">Stand: <h:outputText
+									value="#{dateHandler.now}">
+									<f:convertDateTime timeZone="Europe/Berlin"
+										pattern="dd.MM.yyyy HH:mm" />
+								</h:outputText>
+							</f:facet>
+							<p:column>
+								<p:commandButton icon="ui-icon-check" title="#{msg['txt.inseratSearch.saved']}" rendered="#{inseratSearchHandler.isAlreadyLinkedToInserat(inserat)}" disabled="true" />
+							</p:column>
+							<p:column sortBy="#{inserat.team.club.city}" filterMatchMode="contains">
+								<f:facet name="header">#{msg['txt.inseratSearch.city']}</f:facet>
+								#{inserat.team.club.plz} #{inserat.team.club.city}
+							</p:column>
+							<p:column sortBy="#{inserat.team.sportType.name} ">
+								<f:facet name="header">#{msg['txt.inseratSearch.search.sportType']}</f:facet>
+								#{inserat.team.sportType.name}
+							</p:column>
+							<p:column sortBy="#{inserat.team.club.name}" filterMatchMode="contains">
+								<f:facet name="header">#{msg['txt.inseratSearch.club']}</f:facet>
+								#{inserat.team.club.name}
+							</p:column>
+							<p:column sortBy="#{inserat.team.name} ">
+								<f:facet name="header">#{msg['txt.inseratSearch.team']}</f:facet>
+								#{inserat.team.name}
+							</p:column>
+							<p:column>
+								<f:facet name="header">#{msg['txt.inseratSearch.alter']}</f:facet>
+								#{inserat.team.minAge} - #{inserat.team.maxAge}
+							</p:column>
+							<p:column>
+								<f:facet name="header">#{msg['txt.inseratSearch.leistung']}</f:facet>
+								#{inserat.team.leistungsKlasse}
+							</p:column>
+							<p:column sortBy="#{inserat.validUntil} ">
+								<f:facet name="header">#{msg['txt.inseratSearch.validUntil']}</f:facet>
+								<h:outputText value="#{inserat.validUntil}">
+					            	<f:convertDateTime pattern="dd.MM.yyyy" />
+					            </h:outputText>	
+							</p:column>
+						</p:dataTable>
+					
+				</p:panel>
+				
+				<p:dialog header="#{msg['txt.inseratSearch.details']}" widgetVar="dlg" dynamic="true" modal="true" hideEffect="explode" id="dlg">
+					<p:panelGrid styleClass="detailTable">
+						<p:row>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.club']}</p:column>
+							<p:column>#{inseratSearchHandler.selectedInserat.team.club.name}</p:column>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.team']}</p:column>
+							<p:column>#{inseratSearchHandler.selectedInserat.team.name}</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.sportType']}</p:column>
+							<p:column>#{inseratSearchHandler.selectedInserat.team.sportType.name}</p:column>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.validUntil']}</p:column>
+							<p:column>
+								<p:outputLabel value="#{inseratSearchHandler.selectedInserat.validUntil}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.alter']}</p:column>
+							<p:column>#{inseratSearchHandler.selectedInserat.team.minAge} - #{inseratSearchHandler.selectedInserat.team.maxAge}</p:column>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.leistung']}</p:column>
+							<p:column>#{inseratSearchHandler.selectedInserat.team.leistungsKlasse}</p:column>
+						</p:row>
+						
+						<p:row>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.adress']}</p:column>
+							<p:column colspan="3">
+								#{inseratSearchHandler.selectedInserat.team.club.street}<br/>
+								#{inseratSearchHandler.selectedInserat.team.club.plz} #{inseratSearchHandler.selectedInserat.team.club.city}
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="bold">#{msg['txt.inseratSearch.description']}</p:column>
+							<p:column colspan="3">#{inseratSearchHandler.selectedInserat.description}</p:column>
+						</p:row>
+						<p:row>
+							<p:column/>
+							<p:column>
+								<p:commandButton value="#{msg['txt.inseratSearch.action.save']}" action="#{inseratSearchHandler.linkToInteresting()}" 
+											rendered="#{login.loggedIn and login.accountType.value()==2 and !inseratSearchHandler.isAlreadyLinkedToInserat(inseratSearchHandler.selectedInserat)}" 
+											update=":inseratForm"/>
+								<p:commandButton value="#{msg['txt.inseratSearch.action.unsave']}" action="#{inseratSearchHandler.unLinkToInteresting()}" 
+											rendered="#{login.loggedIn and login.accountType.value()==2 and inseratSearchHandler.isAlreadyLinkedToInserat(inseratSearchHandler.selectedInserat)}" 
+											update=":inseratFormk"/>
+							</p:column>
+							<p:column><p:commandButton value="#{msg['txt.inseratSearch.action.contact']}" rendered="#{login.loggedIn and login.accountType.value()==2}"/></p:column>
+							<p:column><p:commandButton value="#{msg['txt.inseratSearch.action.close']}" onclick="PF('dlg').close();" update=":inseratForm"/></p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:dialog>
+				
+			</h:form>	
+					
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

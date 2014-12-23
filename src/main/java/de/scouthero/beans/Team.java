@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  * @author rgesell
@@ -23,6 +24,7 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "Team.findAll", query = "select t from Team t"),
+	@NamedQuery(name = "Team.findByUser", query = "select t from Team t where t.club.user=:user"),
 	@NamedQuery(name = "Team.findByClub", query = "select t from Team t where t.club=:club") })
 public class Team implements Serializable{
 
@@ -36,11 +38,19 @@ public class Team implements Serializable{
 	private String description;
 	
 	@OneToMany(mappedBy="team")
-	private Set<Ad> ad;
+	private Set<Inserat> ad;
 	
 	@ManyToOne
 	@JoinColumn(name="club_id")
 	private Club club;
+	
+	@OneToOne
+	@JoinColumn(name="sport_id")
+	private SportType sportType;
+	
+	private String leistungsKlasse;
+	private int minAge;
+	private int maxAge;
 	
 	public Team() {
 		
@@ -84,14 +94,84 @@ public class Team implements Serializable{
 	/**
 	 * @return the ad
 	 */
-	public Set<Ad> getAd() {
+	public Set<Inserat> getAd() {
 		return ad;
 	}
 
 	/**
 	 * @param ad the ad to set
 	 */
-	public void setAd(Set<Ad> ad) {
+	public void setAd(Set<Inserat> ad) {
 		this.ad = ad;
+	}
+
+	public SportType getSportType() {
+		return sportType;
+	}
+
+	public void setSportType(SportType sportType) {
+		this.sportType = sportType;
+	}
+
+	/**
+	 * @return the club
+	 */
+	public Club getClub() {
+		return club;
+	}
+
+	/**
+	 * @param club the club to set
+	 */
+	public void setClub(Club club) {
+		this.club = club;
+	}
+
+	@Override
+	public String toString() {
+		return "Team [id=" + id + ", name=" + name + ", club=" + club
+				+ ", sportType=" + sportType + "]";
+	}
+
+	/**
+	 * @return the leistungsKlasse
+	 */
+	public String getLeistungsKlasse() {
+		return leistungsKlasse;
+	}
+
+	/**
+	 * @param leistungsKlasse the leistungsKlasse to set
+	 */
+	public void setLeistungsKlasse(String leistungsKlasse) {
+		this.leistungsKlasse = leistungsKlasse;
+	}
+
+	/**
+	 * @return the minAge
+	 */
+	public int getMinAge() {
+		return minAge;
+	}
+
+	/**
+	 * @param minAge the minAge to set
+	 */
+	public void setMinAge(int minAge) {
+		this.minAge = minAge;
+	}
+
+	/**
+	 * @return the maxAge
+	 */
+	public int getMaxAge() {
+		return maxAge;
+	}
+
+	/**
+	 * @param maxAge the maxAge to set
+	 */
+	public void setMaxAge(int maxAge) {
+		this.maxAge = maxAge;
 	}
 }

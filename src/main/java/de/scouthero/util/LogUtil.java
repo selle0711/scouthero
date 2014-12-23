@@ -55,7 +55,8 @@ public class LogUtil {
 			builder.append(" "+param);
 			if (objects != null) {
 				for (int i = 0; i < objects.length; i++) {
-					builder.append(" "+objects[i].toString());
+					if (objects[i] != null)
+						builder.append(" "+objects[i].toString());
 				}
 			}
 		}

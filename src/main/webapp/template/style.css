@@ -169,3 +169,22 @@ input.searchInputField {
 .ui-radiobutton-box {
 	height: 10px;
 }
+
+.detailTable {
+	text-align: left;
+	width: 500px;
+	border: 0px solid black;	
+}
+.detailTable td {
+	padding-left: 5px;
+}
+
+.bold {
+	font-weight:bold;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+	border 0px;
+	padding: 4px 10px;
+	border-width:0px;
+}

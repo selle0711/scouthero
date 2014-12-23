@@ -2,6 +2,7 @@ package de.scouthero.managedBeans;
 
 import static de.scouthero.util.LogUtil.debugEnter;
 import static de.scouthero.util.LogUtil.debugExit;
+import static de.scouthero.util.Defs.AccountTyp;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -38,7 +39,7 @@ public class Login extends AbstractHandler {
 		debugEnter(logger, methodName);
 		try {
 			user = userService.getUserByNameAndPassword(username, StringWorks.md5(password));
-			return "index.xhtml?faces-redirect=true";
+			return REDIRECT_INDEX;
 			
 		} catch (ScoutheroException e) {
 			if (e.getErrorCode() == ERROR.ENTITY_NOT_FOUND) {
@@ -53,7 +54,7 @@ public class Login extends AbstractHandler {
 
 	public String logout() {
 		user = null;
-		return "index.xhtml?faces-redirect=true";
+		return REDIRECT_INDEX;
 	}
 
 	public boolean isLoggedIn() {
@@ -92,7 +93,17 @@ public class Login extends AbstractHandler {
 		this.password = password;
 	}
 
-	public String getType() {
-		return user!=null && user.getType() == 1? "Spieleraccount":"Vereinsaccount";
+	public AccountTyp getAccountType() {
+		if (user != null) {
+			return user.getType() == AccountTyp.VEREIN.value() ? AccountTyp.VEREIN : AccountTyp.SPIELER;
+		}
+		return null;
+	}
+	
+	public String getTypeAsString() {
+		if (user != null) {
+			return user.getType() == AccountTyp.VEREIN.value()? "Vereinsaccount": "Spieleraccount";
+		} 
+		return null;
 	}
 }

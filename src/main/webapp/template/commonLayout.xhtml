@@ -25,21 +25,22 @@
 			        <p:submenu label="#{msg['menue.transfermarkt']}">
 			            <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
 			            <p:menuitem value="#{msg['menue.spielersuche']}" outcome="showPlayers.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
-			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
+			            <p:menuitem value="#{msg['menue.inseratSearch']}" outcome="inseratSearch.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
 			        </p:submenu>
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{!login.loggedIn}">
 			            <p:menuitem value="#{msg['menue.login']}" url="login.xhtml" update="subContent" ajax="true" icon="ui-icon-key"/>
 			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
 			        </p:submenu>
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{login.loggedIn}">
-			        	<p:menuitem value="#{msg['menue.myClub']}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
+			        	<p:menuitem value="#{msg['menue.myClub']}" rendered="#{login.accountType.value()==1}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
+			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
 			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{login.logout}" icon="ui-icon-power"/>
 			        </p:submenu>
 			    </p:menu>
 				  
 				<br/>
 
-				<p:panel rendered="#{login.loggedIn}" header="#{login.type}">
+				<p:panel rendered="#{login.loggedIn}" header="#{login.typeAsString}">
 					<h:panelGrid columns="2">
 						
 						<h:outputText styleClass="ui-icon  ui-icon-person" />
@@ -57,7 +58,7 @@
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-power" />
 						</h:commandLink>
-						<h:commandLink action="../userProfile"
+						<h:commandLink action="userProfile"
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-wrench" />
 						</h:commandLink>

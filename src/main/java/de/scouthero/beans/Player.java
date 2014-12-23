@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 /**
  * @author rgesell
@@ -26,9 +25,6 @@ public class Player implements Serializable{
 	private Long id;
 	
 	private String description;
-	
-	@OneToOne(mappedBy="player")
-	private Ad ad;
 	
 	public Player() {
 		
@@ -53,19 +49,5 @@ public class Player implements Serializable{
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/**
-	 * @return the ad
-	 */
-	public Ad getAd() {
-		return ad;
-	}
-
-	/**
-	 * @param ad the ad to set
-	 */
-	public void setAd(Ad ad) {
-		this.ad = ad;
 	}
 }

@@ -36,9 +36,7 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-
 			<name>org.eclipse.wst.validation.validationbuilder</name>
-
 			<arguments>
 			</arguments>
 		</buildCommand>

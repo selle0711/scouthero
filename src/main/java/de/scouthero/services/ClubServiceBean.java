@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Club;
+import de.scouthero.beans.SportType;
 import de.scouthero.beans.Team;
 import de.scouthero.beans.User;
 import de.scouthero.util.ScoutheroException;
@@ -88,6 +89,7 @@ public class ClubServiceBean implements ClubService {
 	 * 
 	 * @param selectedUserClub
 	 * @param user
+	 * @param selectedSportTypId
 	 * @throws ScoutheroException
 	 */
 	public void saveClub(final Club selectedUserClub, final User user) throws ScoutheroException {
@@ -126,4 +128,80 @@ public class ClubServiceBean implements ClubService {
 		debugExit(logger, methodName, "teams=", teams);
 		return teams;
 	} 
+	
+	/**
+	 * Legt das Teaman (falls ID noch nich gefüllt) und speichert die Änderungen
+	 * 
+	 * @param selectedUserTeam
+	 * @param userClub
+	 * @param selectedSportTypId
+	 * @throws ScoutheroException
+	 */
+	public void saveTeam(final Team selectedUserTeam, final Club userClub, final Long selectedSportTypId) throws ScoutheroException {
+		final String methodName = "saveTeam()";
+		debugEnter(logger, methodName, "params: ", selectedUserTeam, userClub, selectedSportTypId);
+		try {
+			// find sportType
+			final SportType sportType = em.find(SportType.class, selectedSportTypId);
+			selectedUserTeam.setSportType(sportType);
+			logger.info(sportType.getName() + " gesetzt");
+			if (selectedUserTeam.getId() == null) {
+				selectedUserTeam.setClub(userClub);
+				em.persist(selectedUserTeam);
+			} else {
+				em.merge(selectedUserTeam);
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+			throw new ScoutheroException(e);
+		}
+	}
+	
+	/**
+	 * Löscht den übergebenen Club
+	 * @param team
+	 * @throws ScoutheroException
+	 */
+	public void deleteClub(final Club club) throws ScoutheroException {
+		if (club != null && club.getId() != null) {
+			final Club club2Delete = em.find(Club.class, club.getId());
+			em.remove(club2Delete);
+		} else {
+			throw new ScoutheroException("Kein Club übergeben worden");
+		}
+	}
+	
+	/**
+	 * Löscht das übergebene Team
+	 * @param team
+	 * @throws ScoutheroException
+	 */
+	public void deleteTeam(final Team team) throws ScoutheroException {
+		if (team != null && team.getId() != null) {
+			final Team team2Delete = em.find(Team.class, team.getId());
+			em.remove(team2Delete);
+		} else {
+			throw new ScoutheroException("Kein Team übergeben worden");
+		}
+	}
+	
+	/**
+	 * Liefert alle Sportarten aus der DB
+	 * @return List
+	 * @throws ScoutheroException
+	 */
+	public List<SportType> getAllKindOfSport() throws ScoutheroException {
+		final String methodName = "getAllKindOfSport()";
+		debugEnter(logger, methodName);
+		List<SportType> sports = null;
+		try {
+			TypedQuery<SportType> query = em.createNamedQuery("Sport.findAll", SportType.class);
+			sports = query.getResultList();
+		} catch (Exception e) {
+			throw new ScoutheroException(e);
+		}
+		debugExit(logger, methodName, "sports=", sports);
+		return sports;
+	}
 }
