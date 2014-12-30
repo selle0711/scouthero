@@ -21,4 +21,6 @@ public interface InseratService {
 	public void linkToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
 	public void unLinkToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
 	public boolean isAlreadyLinkedToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
+	public void contactUserInserat(Inserat selectedInserat, User currentUser)throws ScoutheroException;
+	public boolean playerHasTransferContact(Inserat inserat, User player) throws ScoutheroException;
 }

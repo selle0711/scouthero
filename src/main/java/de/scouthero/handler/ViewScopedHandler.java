@@ -4,6 +4,7 @@ import javax.faces.bean.ManagedProperty;
 
 import de.scouthero.beans.User;
 
+
 /**
  * Basis-Klasse für alle ViewScoped ManagedBeans
  * @author rgesell

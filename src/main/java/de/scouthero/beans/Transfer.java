@@ -8,8 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name="Transfer.findByInseratAndUser", query="select t from Transfer t where t.inserat = :inserat and t.contactUser = :contactUser")
+})
 public class Transfer implements Serializable {
 	
 	private static final long serialVersionUID = 7753113453510772450L;
@@ -23,9 +28,9 @@ public class Transfer implements Serializable {
 	 */
 	private Boolean approved;
 	@ManyToOne
-	private User spieler;
+	private User contactUser;
 	@ManyToOne
-	private Team verein;
+	private Inserat inserat;
 	private Date dateOfInterest;
 	private Date dateOfApprovment;
 	
@@ -42,29 +47,18 @@ public class Transfer implements Serializable {
 		this.approved = approved;
 	}
 	/**
-	 * @return the spieler
+	 * @return the contactUser
 	 */
-	public User getSpieler() {
-		return spieler;
+	public User getContactUser() {
+		return contactUser;
 	}
 	/**
 	 * @param spieler the spieler to set
 	 */
-	public void setSpieler(User spieler) {
-		this.spieler = spieler;
+	public void setContactUser(User contactUser) {
+		this.contactUser = contactUser;
 	}
-	/**
-	 * @return the verein
-	 */
-	public Team getVerein() {
-		return verein;
-	}
-	/**
-	 * @param verein the verein to set
-	 */
-	public void setVerein(Team verein) {
-		this.verein = verein;
-	}
+
 	/**
 	 * @return the dateOfInterest
 	 */
@@ -124,5 +118,17 @@ public class Transfer implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	/**
+	 * @return the inserat
+	 */
+	public Inserat getInserat() {
+		return inserat;
+	}
+	/**
+	 * @param inserat the inserat to set
+	 */
+	public void setInserat(Inserat inserat) {
+		this.inserat = inserat;
 	}
 }

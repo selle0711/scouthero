@@ -47,7 +47,7 @@
 						<p:outputLabel value="#{login.user.firstName} #{login.user.name}" /> 
 						
 						<h:outputText styleClass="ui-icon  ui-icon-mail-closed" />
-						<p:outputLabel value="0 Nachrichten"/>
+						<p:outputLabel value="#{messageHandler.countMyMessages(login.user)} neue Nachrichten"/>
 						
 						<h:outputText styleClass="ui-icon  ui-icon-calculator" />
 						<p:outputLabel value="#{userHandler.registerDate}"/>

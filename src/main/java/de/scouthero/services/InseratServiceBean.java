@@ -3,22 +3,27 @@ package de.scouthero.services;
 import static de.scouthero.util.LogUtil.debugEnter;
 import static de.scouthero.util.LogUtil.debugExit;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Inserat;
+import de.scouthero.beans.Message;
 import de.scouthero.beans.Team;
+import de.scouthero.beans.Transfer;
 import de.scouthero.beans.User;
-import de.scouthero.util.ScoutheroException;
 import de.scouthero.util.Defs.AccountTyp;
+import de.scouthero.util.ScoutheroException;
 
 @Stateless
 @Local(InseratService.class)
@@ -212,5 +217,64 @@ public class InseratServiceBean implements InseratService {
 			}
 		}
 		return false;
+	}
+	
+	public void contactUserInserat(Inserat selectedInserat, User currentUser) throws ScoutheroException {
+		final String methodName = "approve()";
+		debugEnter(logger, methodName, "params: ", selectedInserat, currentUser);
+		final Date today = new Date();
+		currentUser = em.find(User.class, currentUser.getId());
+		Transfer transfer = new Transfer();
+		transfer.setDateOfInterest(today);
+		transfer.setInserat(selectedInserat);
+		transfer.setContactUser(currentUser);
+		em.persist(transfer);
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("Hallo "+selectedInserat.getCreator().getLoginName()+",\n");
+		builder.append("\n");
+		builder.append("der User "+currentUser.getLoginName()+" hat auf ihr Inserat vom "+new SimpleDateFormat("dd.mm.yyyy").format(selectedInserat.getCreationTime())+" geantwortet.\n");
+		builder.append("Bitte schauen Sie sich den Interessenten an und antworten Sie auf diese Anfrage.\n");
+		builder.append("\n");
+		builder.append("Zur Kontaktanfrage\n");
+		builder.append("\n");
+		builder.append("Mit freundlichen Grüßen\n");
+		builder.append("Ihr Scouthero.de-Team");
+		
+		Message message = new Message();
+		message.setReciever(selectedInserat.getCreator());
+		message.setSendDate(today);
+		message.setSubject("Ein User hat eine Kontaktanfrage aufgrund eines Inserates gesendet");
+		message.setMessage(builder.toString());
+		em.persist(message);
+	}
+	
+	public boolean playerHasTransferContact(Inserat inserat, User player) throws ScoutheroException {
+		final String methodName = "playerHasTransferContact()";
+		debugEnter(logger, methodName, "params: ", inserat, player);
+		if (inserat != null && player != null) {
+			//attach POJOs
+			inserat = em.find(Inserat.class, inserat.getId());
+			player  = em.find(User.class, player.getId());
+			
+			TypedQuery<Transfer> query = em.createNamedQuery("Transfer.findByInseratAndUser", Transfer.class);
+			query.setParameter("inserat", inserat);
+			query.setParameter("contactUser", player);
+			
+			try {
+				final Transfer transfer =  query.getSingleResult();
+				
+				if (transfer == null) {
+					return false;
+				}
+				return true;
+			} catch ( NoResultException e) {
+				return false;
+			} finally {
+				debugExit(logger, methodName);
+			}
+		} else {
+			throw new ScoutheroException("Keine Daten übergeben");
+		}
 	}
 }

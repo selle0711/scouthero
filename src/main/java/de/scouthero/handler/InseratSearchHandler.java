@@ -1,7 +1,6 @@
 package de.scouthero.handler;
 
 import static de.scouthero.util.LogUtil.debugEnter;
-import static de.scouthero.util.Defs.AccountTyp;
 
 import java.util.List;
 
@@ -16,6 +15,7 @@ import org.primefaces.event.SelectEvent;
 
 import de.scouthero.beans.Inserat;
 import de.scouthero.services.InseratService;
+import de.scouthero.util.Defs.AccountTyp;
 import de.scouthero.util.ScoutheroException;
 
 @ViewScoped
@@ -43,6 +43,16 @@ public class InseratSearchHandler extends ViewScopedHandler {
 			inserate = inseratService.loadInserate(selectedSearchOption);
 		} catch (ScoutheroException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+	
+	public void approve() {
+		if (selectedInserat != null && currentUser != null) {
+			try {
+				inseratService.contactUserInserat(selectedInserat, currentUser);
+			} catch (ScoutheroException e) {
+				addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			}
 		}
 	}
 	
@@ -96,6 +106,19 @@ public class InseratSearchHandler extends ViewScopedHandler {
 			}
 		}
 		return false;
+	}
+	
+	public boolean playerHasTransferContact(Inserat inserat) {
+		try {
+			return inseratService.playerHasTransferContact(inserat, currentUser);
+		} catch (ScoutheroException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+		return false;
+	}
+	
+	public boolean playerHasTransferContact() {
+		return playerHasTransferContact(selectedInserat);
 	}
 	
 	/**
