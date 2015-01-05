@@ -16,6 +16,7 @@ import org.primefaces.event.SelectEvent;
 import de.scouthero.beans.Inserat;
 import de.scouthero.beans.SportType;
 import de.scouthero.beans.Team;
+import de.scouthero.beans.Transfer;
 import de.scouthero.services.ClubService;
 import de.scouthero.services.InseratService;
 import de.scouthero.util.ScoutheroException;
@@ -123,6 +124,32 @@ public class InseratHandler extends ViewScopedHandler{
 			showAdEditPanel = false;
 			selectedInserat = null;
 			selectedUserTeam = null;
+		} catch (ScoutheroException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+	
+	public void disApprove(Transfer transfer) {
+		final String methodName="disApprove()";
+		debugEnter(logger, methodName, "params: ", transfer);
+		if (transfer == null) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Transfer is null");
+		}
+		try {
+			inseratService.disApprove(transfer);
+		} catch (ScoutheroException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+	
+	public void approve(Transfer transfer) {
+		final String methodName="approve()";
+		debugEnter(logger, methodName, "params: ", transfer);
+		if (transfer == null) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Transfer is null");
+		}
+		try {
+			inseratService.approve(transfer);
 		} catch (ScoutheroException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.network']}" url="#" />
+				<p:menuitem value="#{msg['menue.messages']}" outcome="messages" />
+			</p:breadCrumb>
+		</ui:define>
+			
+		<ui:define name="content">
+			<h:form id="messageForm">
+				<p:panel header="#{msg['txt.messages.header']}" styleClass="contentPanel">
+					<div style="text-align: left; margin-bottom: 10px">
+						<p:outputLabel value="#{msg['txt.messages.global']}"/>
+					</div>
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+					
+					<p:dataTable id="messageDT" var="message" value="#{myMessageHandler.myMessages}" selectionMode="single" selection="#{myMessageHandler.selectedMessage}" rowKey="#{message.id}" emptyMessage="#{msg.emptyData}">
+						<p:ajax event="rowSelect" listener="#{myMessageHandler.onRowSelect}" update=":messageForm" />
+        				<p:ajax event="rowUnselect" listener="#{myMessageHandler.onRowUnSelect}" update=":messageForm" />
+				        
+				        <p:column width="30">
+				        	<h:panelGroup styleClass="ui-icon ui-icon-mail-closed" rendered="#{message.readDate == null}" />
+				            <h:panelGroup styleClass="ui-icon ui-icon-mail-open" rendered="#{message.readDate != null}"/>
+				        </p:column>
+				        
+						<p:column headerText="#{msg['txt.messages.date']}" width="160">
+				            <h:outputText value="#{message.sendDate}">
+				            	<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+				            </h:outputText>
+				        </p:column>
+				        <p:column headerText="#{msg['txt.messages.sender']}" width="200">
+				            <h:outputText value="#{message.sender.firstName} " /> 
+				            <h:outputText value="#{message.sender.name}" />
+				        </p:column>		
+				         <p:column headerText="#{msg['txt.messages.subject']}">
+				            <h:outputText value="#{message.subject}" />
+				        </p:column>		
+				       
+				        <p:column headerText="#{msg['txt.userClub.actions']}" width="120">
+				        	<p:commandButton title="#{msg['txt.messages.actions.del']}" icon="ui-icon-trash" action="#{myClubHandler.deleteClub(club)}" update=":messageForm">
+				        		<p:confirm header="#{msg.confirmation}" message="#{msg['confirmation.text.messages']}" icon="ui-icon-alert" />
+				        	</p:commandButton>
+				        </p:column>
+					</p:dataTable>
+					<br/><br/>
+					<p:panel id="messagePanel" rendered="#{myMessageHandler.selectedMessage != null}">
+						<h:panelGrid columns="1">
+							<p:outputLabel value="#{msg['txt.messages.text']}"/>
+							<p:inputTextarea readonly="true" value="#{myMessageHandler.selectedMessage.message}" rows="10" cols="150" />
+							<p:commandButton value="reply" icon="ui-icon-arrowreturnthick-1-e" action="#{myMessageHandler.showReply()}" update=":messageForm" rendered="#{!myMessageHandler.showReply}"/>
+						</h:panelGrid>
+						<br/>
+						<h:panelGrid columnClasses="1" rendered="#{myMessageHandler.showReply}">
+							<p:outputLabel value="#{msg['txt.messages.answertext']}"/>
+							<p:inputTextarea id="Antworttext" value="#{myMessageHandler.newMessage}" rows="20" cols="150" required="true"/>
+							<h:panelGroup>
+								<p:commandButton value="senden" action="#{myMessageHandler.sendMessage()}" icon="ui-icon-comment" update=":messageForm"/>
+								<p:commandButton value="abbrechen" action="#{myMessageHandler.abortMessage()}" icon="ui-icon-close" update=":messageForm"/>
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:panel>
+					
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+					<p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+  

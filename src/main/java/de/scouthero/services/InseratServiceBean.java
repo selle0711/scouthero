@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,11 +19,11 @@ import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 import de.scouthero.beans.Inserat;
-import de.scouthero.beans.Message;
 import de.scouthero.beans.Team;
 import de.scouthero.beans.Transfer;
 import de.scouthero.beans.User;
 import de.scouthero.util.Defs.AccountTyp;
+import de.scouthero.util.Defs.MessageTyp;
 import de.scouthero.util.ScoutheroException;
 
 @Stateless
@@ -32,6 +33,9 @@ public class InseratServiceBean implements InseratService {
 	
 	@PersistenceContext(name="scoutheroDS")
 	private EntityManager em;
+	
+	@EJB
+	private MessageService messageService;
 	
 	/**
 	 * 
@@ -241,12 +245,8 @@ public class InseratServiceBean implements InseratService {
 		builder.append("Mit freundlichen Grüßen\n");
 		builder.append("Ihr Scouthero.de-Team");
 		
-		Message message = new Message();
-		message.setReciever(selectedInserat.getCreator());
-		message.setSendDate(today);
-		message.setSubject("Ein User hat eine Kontaktanfrage aufgrund eines Inserates gesendet");
-		message.setMessage(builder.toString());
-		em.persist(message);
+		final String subject = "Transferanfrage aufgrund eines Inserates vom "+new SimpleDateFormat("dd.mm.yyyy").format(selectedInserat.getCreationTime());
+		messageService.sendMessage(currentUser, selectedInserat.getCreator(), subject, builder, MessageTyp.TRANSFER_ANFRAGE);
 	}
 	
 	public boolean playerHasTransferContact(Inserat inserat, User player) throws ScoutheroException {
@@ -273,6 +273,45 @@ public class InseratServiceBean implements InseratService {
 			} finally {
 				debugExit(logger, methodName);
 			}
+		} else {
+			throw new ScoutheroException("Keine Daten übergeben");
+		}
+	}
+
+	public void approve(Transfer transfer) throws ScoutheroException {
+		final String methodName = "approve()";
+		debugEnter(logger, methodName, "params: ", transfer);
+		if (transfer != null) {
+			//attach POJOs
+			transfer = em.find(Transfer.class, transfer.getId());
+			transfer.setApproved(Boolean.TRUE);
+			transfer.setDateOfApprovment(new Date());
+			
+		} else {
+			throw new ScoutheroException("Keine Daten übergeben");
+		}
+	}
+	
+	public void disApprove(Transfer transfer) throws ScoutheroException {
+		final String methodName = "disApprove()";
+		debugEnter(logger, methodName, "params: ", transfer);
+		if (transfer != null) {
+			//attach POJOs
+			transfer = em.find(Transfer.class, transfer.getId());
+			transfer.setApproved(Boolean.FALSE);
+			transfer.setDateOfApprovment(new Date());
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("Hallo "+transfer.getContactUser().getLoginName()+",\n");
+			builder.append("\n");
+			builder.append("der User "+transfer.getInserat().getCreator().getLoginName()+" hat ihre Transferanfrage vom "+new SimpleDateFormat("dd.mm.yyyy").format(transfer.getDateOfInterest())+" leider nicht bestätigt.\n");
+			builder.append("\n");
+			builder.append("Mit freundlichen Grüßen\n");
+			builder.append("Ihr Scouthero.de-Team");
+			
+			final String subject = "Ihre Transferanfrage wurde leider nicht bestätigt";
+			messageService.sendMessage(transfer.getInserat().getCreator(), transfer.getContactUser(), subject, builder, MessageTyp.TRANSFER_ANFRAGE);
+			
 		} else {
 			throw new ScoutheroException("Keine Daten übergeben");
 		}

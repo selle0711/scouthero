@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 
@@ -60,6 +61,9 @@ public class Inserat implements Serializable {
 	@ManyToMany(targetEntity=User.class, fetch=FetchType.EAGER)
 	@JoinTable(name="inseratInterests", joinColumns={@JoinColumn(name="inserat_id")},inverseJoinColumns={@JoinColumn(name="user_id")})
 	private List<User> interestingPeople;
+	
+	@OneToMany(mappedBy="inserat", fetch=FetchType.EAGER)
+	private List<Transfer> transfers;
 	
 	public Inserat() {
 		this.creationTime = new Date(System.currentTimeMillis());
@@ -232,5 +236,19 @@ public class Inserat implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the transfers
+	 */
+	public List<Transfer> getTransfers() {
+		return transfers;
+	}
+
+	/**
+	 * @param transfers the transfers to set
+	 */
+	public void setTransfers(List<Transfer> transfers) {
+		this.transfers = transfers;
 	}
 }

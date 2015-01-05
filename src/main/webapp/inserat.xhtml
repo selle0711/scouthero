@@ -31,9 +31,7 @@
 						<p:outputLabel value="#{msg['txt.inserat.global']}"/>
 					</div>
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
-					
-					
-					
+
 					<p:dataTable id="inseratDT" var="inserat" value="#{inseratHandler.inserate}" selectionMode="single" selection="#{inseratHandler.selectedInserat}" rowKey="#{inserat.id}" emptyMessage="#{msg.emptyData}">
 						<p:ajax event="rowSelect" listener="#{inseratHandler.onRowSelect}" update=":inseratForm" />
         				<p:ajax event="rowUnselect" listener="#{inseratHandler.onRowUnSelect}" update=":inseratForm" />
@@ -55,8 +53,7 @@
 				            <h:outputText value="#{inserat.viewed}" />
 				        </p:column>
 				        <p:column headerText="#{msg['txt.inserat.interest']}">
-				            <h:outputText value="#{inserat.countInterestPeople}" />
-				            <p:commandButton title="#{msg['txt.inserat.actions.findInterestingPeople']}" icon="ui-icon-search"/>
+				            <h:outputText value="#{inserat.countInterestPeople} " /> 
 				        </p:column>
 				        <p:column headerText="#{msg['txt.inserat.validUntil']}">
 				            <h:outputText value="#{inserat.validUntil}">
@@ -69,7 +66,7 @@
 				        	</p:commandButton>
 				        </p:column>
 					</p:dataTable>
-					
+					<br/><br/>
 					<p:panel id = "inseratPanel" rendered="#{inseratHandler.showAdEditPanel}" header="#{inseratHandler.selectedInserat.id == null ? msg['txt.inserat.newInserat'] : msg['txt.inserat.editInserat']}">
 						<h:panelGrid columns="1">
 							<h:outputLabel value="#{msg['txt.inserat.team']}" for="teamAuswahl" rendered="#{login.accountType.value()==1}"/>
@@ -88,7 +85,10 @@
 					        <p:outputLabel value="#{msg['txt.inserat.description']}" for="descr" />
 							<p:inputTextarea id="descr" rows="10" cols="100" autoResize="false" value="#{inseratHandler.selectedInserat.description}" placeholder="#{msg['txt.inserat.description']}"  required="true" />
 							
-							<p:commandButton actionListener="#{inseratHandler.saveInserat()}" value="#{inseratHandler.selectedInserat.id == null ? msg['txt.inserat.persist'] : msg['txt.inserat.edit']}"  update="messages :inseratForm"/>
+							<h:panelGroup>
+								<p:commandButton value="#{msg['txt.inserat.actions.transferRequests']}" icon="ui-icon-search" onclick="PF('inseratDialog').show();"/>
+								<p:commandButton actionListener="#{inseratHandler.saveInserat()}" value="#{inseratHandler.selectedInserat.id == null ? msg['txt.inserat.persist'] : msg['txt.inserat.edit']}"  update="messages :inseratForm"/>
+							</h:panelGroup>
 						</h:panelGrid>
 					</p:panel>
 				</p:panel>
@@ -98,6 +98,32 @@
 				<p:commandButton value="#{msg.yes}" type="button"	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 				<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 			</p:confirmDialog>
+			
+			<p:dialog header="Transferanfragen des Inserates" widgetVar="inseratDialog" dynamic="true" modal="true" width="700">
+			   <p:dataTable value="#{inseratHandler.selectedInserat.transfers}" var="transfer" rowKey="#{transfer.id}">
+			   		 <p:column headerText="date">
+			            <h:outputText value="#{transfer.dateOfInterest}">
+			            	<f:convertDateTime pattern="dd.MM.yyyy" />
+			            </h:outputText>
+			        </p:column>
+			        <p:column headerText="Name" >
+			            <h:outputText value="#{transfer.contactUser.firstName} #{transfer.contactUser.name}" />
+			        </p:column>
+			        <p:column headerText="Approvment" width="200">
+			        	<h:outputText value="Transfer " rendered="#{transfer.approved != null}"/>
+			        	<h:outputText value="nicht " rendered="#{transfer.approved != null and transfer.approved == false}"/>
+			        	<h:outputText value="bestätigt am " rendered="#{transfer.approved != null}" />
+			            <h:outputText value="#{transfer.dateOfApprovment}"  rendered="#{transfer.approved != null}">
+			            	<f:convertDateTime pattern="dd.MM.yyyy" />
+			            </h:outputText>
+			        </p:column>
+			        <p:column>
+			        	<p:commandButton title="approve" icon="ui-icon-circle-check" action="#{inseratHandler.approve(transfer)}" rendered="#{transfer.approved == null}" update=":inseratForm"/>
+			        	<p:commandButton title="disappove" icon="ui-icon-circle-close" action="#{inseratHandler.disApprove(transfer)}" rendered="#{transfer.approved == null}" update=":inseratForm"/>
+			        </p:column>
+			   </p:dataTable>
+			</p:dialog>
+			
 		</ui:define>
 	</ui:composition>
 </h:body>

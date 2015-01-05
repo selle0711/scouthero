@@ -5,14 +5,16 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 import de.scouthero.beans.Message;
 import de.scouthero.beans.User;
 import de.scouthero.services.MessageService;
 import de.scouthero.util.ScoutheroException;
 
+@RequestScoped
 @ManagedBean
-public class MessageHandler extends AbstractHandler{
+public class GlobalHandler extends AbstractHandler{
 
 	private static final long serialVersionUID = -9211901863760968180L;
 	@EJB

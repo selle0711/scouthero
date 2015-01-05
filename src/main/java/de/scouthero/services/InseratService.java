@@ -6,6 +6,7 @@ import javax.ejb.Local;
 
 import de.scouthero.beans.Inserat;
 import de.scouthero.beans.Team;
+import de.scouthero.beans.Transfer;
 import de.scouthero.beans.User;
 import de.scouthero.util.Defs.AccountTyp;
 import de.scouthero.util.ScoutheroException;
@@ -23,4 +24,6 @@ public interface InseratService {
 	public boolean isAlreadyLinkedToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
 	public void contactUserInserat(Inserat selectedInserat, User currentUser)throws ScoutheroException;
 	public boolean playerHasTransferContact(Inserat inserat, User player) throws ScoutheroException;
+	public void approve(Transfer transfer) throws ScoutheroException;
+	public void disApprove(Transfer transfer) throws ScoutheroException;
 }

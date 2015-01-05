@@ -34,6 +34,7 @@
 			        <p:submenu label="#{msg['menue.network']}" rendered="#{login.loggedIn}">
 			        	<p:menuitem value="#{msg['menue.myClub']}" rendered="#{login.accountType.value()==1}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
 			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
+			            <p:menuitem value="#{msg['menue.messages']}" outcome="messages.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-mail-open"/>
 			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{login.logout}" icon="ui-icon-power"/>
 			        </p:submenu>
 			    </p:menu>
@@ -47,7 +48,7 @@
 						<p:outputLabel value="#{login.user.firstName} #{login.user.name}" /> 
 						
 						<h:outputText styleClass="ui-icon  ui-icon-mail-closed" />
-						<p:outputLabel value="#{messageHandler.countMyMessages(login.user)} neue Nachrichten"/>
+						<p:outputLabel value="#{globalHandler.countMyMessages(login.user)} neue Nachrichten"/>
 						
 						<h:outputText styleClass="ui-icon  ui-icon-calculator" />
 						<p:outputLabel value="#{userHandler.registerDate}"/>
