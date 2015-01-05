@@ -12,6 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  * @author rgesell
@@ -35,7 +36,9 @@ public class User implements Serializable {
 	private String name;
 	private String firstName;
 	private int type;
-	private int age;
+	
+	@Temporal(javax.persistence.TemporalType.DATE)
+	private Date birthDate;
 	private int postalCode;
 	private String city;
 	private String phone;
@@ -158,20 +161,6 @@ public class User implements Serializable {
 	}
 	
 	/**
-	 * @return the type
-	 */
-	public int getAge() {
-		return age;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	/**
 	 * @return the ads
 	 */
 	public Set<Inserat> getAds() {
@@ -239,6 +228,19 @@ public class User implements Serializable {
 	 */
 	public void setAdditionalInfo(String additionalInfo) {
 		this.additionalInfo = additionalInfo;
+	}
+	
+	public Date getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	@Transient
+	public String getTypeAsString() {
+		return this!=null && this.getType() == 1? "Spieleraccount":"Vereinsaccount";
 	}
 
 	@Override

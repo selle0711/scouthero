@@ -56,7 +56,7 @@ public class UserServiceBean implements UserServiceSB {
 	 * 
 	 * @param user
 	 */
-	public void updateUser(User user) {
+	public void updateUser(User user) throws ScoutheroException{
 		if (user != null) {
 			if (user.getId() != null) {
 //				 update
@@ -65,16 +65,16 @@ public class UserServiceBean implements UserServiceSB {
 //				insert
 				em.persist(user);
 			}
+		} else {
+			throw new ScoutheroException("Kein User vorhanden");
 		}
 	}
 	
 	/**
 	 * 
-	 * @param id
+	 * @param user
 	 */
-	public void deleteUser(Long id) {
-		User user = em.find(User.class, id);
-		if (user != null)
-			em.remove(user);
+	public void deleteUser(User user) {
+		
 	}
 }

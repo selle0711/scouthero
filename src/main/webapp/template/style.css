@@ -188,3 +188,7 @@ input.searchInputField {
 	padding: 4px 10px;
 	border-width:0px;
 }
+
+.ui-inputfield {
+	width: 250px;
+}
