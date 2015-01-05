@@ -7,7 +7,7 @@ import de.scouthero.util.ScoutheroException;
 
 @Local
 public interface UserServiceSB {
-	public User getUserByNameAndPassword(final String login, final String password)  throws ScoutheroException;
-	public void updateUser(User user);
-	public void deleteUser(Long id);
+	public User getUserByNameAndPassword(final String login, final String password) throws ScoutheroException;
+	public void updateUser(User user) throws ScoutheroException;
+	public void deleteUser(User user) throws ScoutheroException;
 }
