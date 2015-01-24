@@ -3,6 +3,8 @@ package de.scouthero.services;
 import static de.scouthero.util.LogUtil.debugEnter;
 import static de.scouthero.util.LogUtil.debugExit;
 
+import java.util.List;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +25,39 @@ public class UserServiceBean implements UserServiceSB {
 	
 	@PersistenceContext(name="scoutheroDS")
 	private EntityManager em;
+	
+	
+	public List<User> getUserList() {
+		final String methodName = "getUserByNameAndPassword()";
+		debugEnter(logger, methodName);
+		TypedQuery<User> query = em.createNamedQuery("User.findAll", User.class);
+		return query.getResultList();
+	}
+	
+	/**
+	 * 
+	 * @param login
+	 * @param mail
+	 * @return
+	 */
+	public boolean isUserOrMailAlreadyExist(final String login, final String mail) {
+		final String methodName = "isUserOrMailAlreadyExist()";
+		debugEnter(logger, methodName, "params: ", login, mail);
+		
+		TypedQuery<User> query = em.createNamedQuery("User.findByEmailOrLogin", User.class);
+		query.setParameter("loginName", login);
+		query.setParameter("email", mail);
+		try {
+			List<User> ll = query.getResultList();
+			if (ll == null || ll.isEmpty()) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * @param login

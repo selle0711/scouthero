@@ -25,6 +25,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @NamedQueries({
+	@NamedQuery(name="Inserat.findAll", query="select i from Inserat i order by i.creationTime DESC"),
 	@NamedQuery(name="Inserat.findByUser", query="select i from Inserat i where i.creator = :user"),
 	@NamedQuery(name="Inserat.findByOption", query="select i from Inserat i where i.type = :type")
 })

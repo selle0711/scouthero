@@ -34,8 +34,7 @@
 					<p:accordionPanel >
 				        <p:tab title="Suchoptionen">
 				            <h:panelGrid columns="2" cellpadding="10">
-				                <h:outputText
-				                    value="The story begins as Don Vito Corleone..." />
+				              <img border="0" src="//maps.googleapis.com/maps/api/staticmap?center=Germany&amp;zoom=6&amp;size=450x550&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:S%7C39646,Germany&amp;markers=color:green%7Clabel:G%7C40.711614,-74.012318&amp;markers=color:red%7Clabel:C%7C40.718217,-73.998284&amp;sensor=false" alt="interessante Orte in Lower Manhattan" />
 				            </h:panelGrid>
 				        </p:tab>
 			        </p:accordionPanel>
@@ -50,13 +49,13 @@
 							<p:ajax event="rowSelect" listener="#{inseratSearchHandler.onRowSelect}" onsuccess="PF('dlg').show();" update=":inseratForm" />
         					<p:ajax event="rowUnselect" listener="#{inseratSearchHandler.onRowUnSelect}" update=":inseratForm" />
 							<f:facet name="footer">Stand: <h:outputText
-									value="#{dateHandler.now}">
+									value="#{globalHandler.now}">
 									<f:convertDateTime timeZone="Europe/Berlin"
 										pattern="dd.MM.yyyy HH:mm" />
 								</h:outputText>
 							</f:facet>
 							<p:column>
-								<p:commandButton icon="ui-icon-info" title="#{msg['txt.inseratSearch.saved']}" rendered="#{inseratSearchHandler.isAlreadyLinkedToInserat(inserat)}" disabled="true" />
+								<p:commandButton icon="ui-icon-info" title="#{msg['txt.inseratSearch.saved']}" rendered="#{inseratSearchHandler.isAlreadyInterestedToInserat(inserat)}" disabled="true" />
 								<p:commandButton icon="ui-icon-check" title="#{msg['txt.inseratSearch.contacted']}" rendered="#{inseratSearchHandler.playerHasTransferContact(inserat)}" disabled="true" />
 							</p:column>
 							<p:column sortBy="#{inserat.team.club.city}" filterMatchMode="contains">
@@ -136,7 +135,7 @@
 											rendered="#{login.loggedIn and login.accountType.value()==2 and !inseratSearchHandler.isAlreadyLinkedToInserat(inseratSearchHandler.selectedInserat)}" 
 											update=":inseratForm"/>
 								<p:commandButton value="#{msg['txt.inseratSearch.action.unsave']}" action="#{inseratSearchHandler.unLinkToInteresting()}" 
-											rendered="#{login.loggedIn and login.accountType.value()==2 and inseratSearchHandler.isAlreadyLinkedToInserat(inseratSearchHandler.selectedInserat)}" 
+											rendered="#{login.loggedIn and login.accountType.value()==2 and inseratSearchHandler.isAlreadyInterestedToInserat(inseratSearchHandler.selectedInserat)}" 
 											update=":inseratForm"/>
 							</p:column>
 							<p:column><p:commandButton value="#{msg['txt.inseratSearch.action.contact']}" action="#{inseratSearchHandler.approve()}" 

@@ -25,57 +25,65 @@
 		
 		<ui:define name="content">
 			<h:form id="registerForm">
-				<p:messages id="messages" />
 				<p:panel header=" #{msg['txt.register.header']}" styleClass="contentPanel">
+					<p:messages id="messages" />
 					<p:outputLabel value="#{msg['txt.register.global']}"/>
 					<h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">
 						<h:outputLabel value="#{msg['txt.register.type']}" />
-						<p:selectOneRadio id="type" enabledClass="radio" value="#{userHandler.user.type}" required="true">
+						<p:selectOneRadio id="type" enabledClass="radio" value="#{profileHandler.newUser.type}" required="true">
 							<f:selectItem id="item1" itemLabel="#{msg['txt.register.type.club']}" itemValue="1" />
 							<f:selectItem id="item2" itemLabel="#{msg['txt.register.type.player']}" itemValue="2" />
 						</p:selectOneRadio>
 						
 						<h:outputLabel for="loginname" value="#{msg['txt.register.login']}" />
-						<p:inputText required="true" id="loginname"	value="#{userHandler.user.loginName}" />
+						<p:inputText required="true" id="loginname"	value="#{profileHandler.newUser.loginName}" />
 
 						<h:outputLabel for="password" value="#{msg['txt.register.password']}" />
-						<p:password id="password" value="#{userHandler.user.password}"
+						<p:password id="password" value="#{profileHandler.newUser.password}"
 							feedback="true" promptLabel="#{msg['txt.register.password.safety']}"
 							weakLabel="#{msg['txt.register.password.safety.week']}" goodLabel="#{msg['txt.register.password.safety.good']}" strongLabel="#{msg['txt.register.password.safety.strong']}">
 						</p:password>
 
 						<h:outputLabel for="pwd2" value="#{msg['txt.register.password.repeat']}" />
-						<p:password id="pwd2" value="#{userHandler.repeatedPWD}" required="true" />
+						<p:password id="pwd2" value="#{profileHandler.repeatedPWD}" required="true" />
 
 						<h:outputLabel for="email" value="#{msg['txt.register.mail']}" />
-						<p:inputText id="email" required="true" label="Email" value="#{userHandler.user.email}" >
+						<p:inputText id="email" required="true" label="Email" value="#{profileHandler.newUser.email}" >
 							<f:validator validatorId="emailvalidierer" />
 						</p:inputText>
 
 						<h:outputLabel for="firstname" value="#{msg['txt.register.firstname']}" />
-						<p:inputText required="true" id="firstname" value="#{userHandler.user.firstName}" />
+						<p:inputText required="true" id="firstname" value="#{profileHandler.newUser.firstName}" />
 							
 						<h:outputLabel for="lastname" value="#{msg['txt.register.name']}" />
-						<p:inputText id="lastname" required="true" value="#{userHandler.user.name}" />
+						<p:inputText id="lastname" required="true" value="#{profileHandler.newUser.name}" />
 							
-						<h:outputLabel for="age" value="#{msg['txt.register.birthdate']}" />
-									
+						<h:outputLabel for="birthdate" value="#{msg['txt.register.birthdate']}" />
+						<p:calendar id="date"
+								value="#{profileHandler.newUser.birthDate}" pages="1"
+								required="true" pattern="dd.MM.yyyy">
+							<f:validator validatorId="birthdateValidator" />
+						</p:calendar>
+										
 						<h:outputLabel for="plz" value="#{msg['txt.register.plz']}" />
-						<p:inputText id="plz" value="#{userHandler.user.postalCode}" />
+						<p:inputText id="plz" value="#{profileHandler.newUser.postalCode}" />
 
 						<h:outputLabel for="city" value="#{msg['txt.register.city']}" />
-						<p:inputText id="city" value="#{userHandler.user.city}" />
+						<p:inputText id="city" value="#{profileHandler.newUser.city}" />
 						
 						<h:outputLabel for="phone" value="#{msg['txt.register.phone']}" />
-						<p:inputText id="phone" value="#{userHandler.user.phone}" />
+						<p:inputText id="phone" value="#{profileHandler.newUser.phone}" />
 
 						<h:outputLabel for="info" value="#{msg['txt.register.addInfos']}" />
-						<p:inputTextarea id="info" value="#{userHandler.user.additionalInfo}" rows="5" cols="30" 
+						<p:inputTextarea id="info" value="#{profileHandler.newUser.additionalInfo}" rows="5" cols="30" 
 							counter="counter" maxlength="255" counterTemplate="Anzahl Zeichen übrig: {0}" />
 						<h:outputLabel />
 						<h:outputLabel id="counter" />  
 						
-						<p:commandButton value="#{msg['txt.register.action.register']}" update="messages" actionListener="#{userHandler.register}" />									
+						<!-- h:outputLabel value="Captcha"/>
+						<p:captcha label="Captcha" /> -->
+						
+						<p:commandButton value="#{msg['txt.register.action.register']}" update=":registerForm" action="#{profileHandler.register()}" />									
 						
 					</h:panelGrid>
 				</p:panel>

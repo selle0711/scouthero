@@ -25,85 +25,109 @@
 
 
 		<ui:define name="content">
-			<h:form id="form">
+			<p:panel header="#{msg['txt.userProfile.header']}"
+				styleClass="contentPanel">
+				<div style="text-align: left; margin-bottom: 10px">
+					<p:outputLabel value="#{msg['txt.userProfile.global']}" />
+				</div>
+				<h:panelGrid columns="3">
+					<h:form id="form">
+						<h:panelGrid columns="1">
+							<p:messages id="messages" showDetail="true" autoUpdate="true"
+								closable="true" />
+							<h:outputLabel for="firstname"
+								value="#{msg['txt.userProfile.firstName']}" />
+							<p:inputText required="true" id="firstname"
+								value="#{profileHandler.currentUser.firstName}" />
 
-				<p:panel header="#{msg['txt.userProfile.header']}" styleClass="contentPanel">
-					<div style="text-align: left; margin-bottom: 10px">
-						<p:outputLabel value="#{msg['txt.userProfile.global']}"/>
-					</div>
-					<p:messages id="messages" showDetail="true" autoUpdate="true"	closable="true" />
-					
-					<h:panelGrid columns="2">
-						<h:outputLabel for="loginName" value="#{msg['txt.userProfile.loginName']}" />
-						<p:outputLabel id="loginName" value="#{profileHandler.currentUser.loginName}" />
-						
-						<h:outputLabel for="account" value="#{msg['txt.userProfile.type']}" />
-						<p:outputLabel id="account" value="#{profileHandler.currentUser.typeAsString}" />
-						
-						<h:outputLabel for="registerDate" value="#{msg['txt.userProfile.registerDate']}" />
-						<p:outputLabel id="registerDate" value="#{profileHandler.currentUser.registerDate}">
-							
-						</p:outputLabel>
+							<h:outputLabel for="lastname"
+								value="#{msg['txt.userProfile.lastName']}" />
+							<p:inputText id="lastname" required="true"
+								value="#{profileHandler.currentUser.name}" />
+
+							<h:outputLabel for="date"
+								value="#{msg['txt.userProfile.birthdate']}" />
+							<p:calendar id="date"
+								value="#{profileHandler.currentUser.birthDate}" pages="1"
+								required="true" pattern="dd.MM.yyyy">
+								<f:validator validatorId="birthdateValidator" />
+							</p:calendar>
+
+							<h:outputLabel for="plz" value="#{msg['txt.userProfile.plz']}" />
+							<p:inputText id="plz"
+								value="#{profileHandler.currentUser.postalCode}" />
+
+							<h:outputLabel for="city" value="#{msg['txt.userProfile.city']}" />
+							<p:inputText id="city" value="#{profileHandler.currentUser.city}" />
+
+							<h:outputLabel for="email" value="#{msg['txt.userProfile.mail']}" />
+							<p:inputText id="email" required="true" label="Email"
+								value="#{profileHandler.currentUser.email}">
+								<f:validator validatorId="emailvalidierer" />
+							</p:inputText>
+
+							<h:outputLabel for="phone" value="#{msg['txt.userProfile.tel']}" />
+							<p:inputText id="phone"
+								value="#{profileHandler.currentUser.phone}" />
+
+							<h:outputLabel for="info"
+								value="#{msg['txt.userProfile.additionalInfos']} "
+								style="vertical-align:top" />
+							<h:panelGroup>
+								<p:inputTextarea id="info"
+									value="#{profileHandler.currentUser.additionalInfo}" rows="5"
+									cols="30" counter="counter" maxlength="255"
+									counterTemplate="#{msg['txt.userProfile.additionalInfos.counter']} {0}" />
+								<h:outputLabel />
+								<br />
+								<h:outputLabel id="counter" />
+							</h:panelGroup>
+							<p:commandButton value="#{msg['txt.userProfile.save']} "
+								update=":form" icon="ui-icon-disk"
+								action="#{profileHandler.save()}" />
+						</h:panelGrid>
+					</h:form>
+					<h:panelGrid width="50">
+						<br />
 					</h:panelGrid>
-					
 					<h:panelGrid columns="1">
-						<h:outputLabel for="firstname" value="#{msg['txt.userProfile.firstName']}" />
-						<p:inputText required="true" id="firstname"	value="#{profileHandler.currentUser.firstName}" />
-
-						<h:outputLabel for="lastname" value="#{msg['txt.userProfile.lastName']}" />
-						<p:inputText id="lastname" required="true"	value="#{profileHandler.currentUser.name}" />
-						
-						<h:outputLabel for="date" value="#{msg['txt.userProfile.birthdate']}" />
-						<p:calendar id="date" value="#{profileHandler.currentUser.birthDate}" pages="1" required="true" pattern="dd.MM.yyyy">
-							<f:validator validatorId="birthdateValidator" />
-						</p:calendar>
-
-						<h:outputLabel for="plz" value="#{msg['txt.userProfile.plz']}" />
-						<p:inputText id="plz" value="#{profileHandler.currentUser.postalCode}" />
-
-						<h:outputLabel for="city" value="#{msg['txt.userProfile.city']}" />
-						<p:inputText id="city" value="#{profileHandler.currentUser.city}" />
-
-						<h:outputLabel for="email" value="#{msg['txt.userProfile.mail']}" />
-						<p:inputText id="email" required="true" label="Email" value="#{profileHandler.currentUser.email}">
-							<f:validator validatorId="emailvalidierer" />
-						</p:inputText>
-
-						<h:outputLabel for="phone" value="#{msg['txt.userProfile.tel']}" />
-						<p:inputText id="phone" value="#{profileHandler.currentUser.phone}" />
-
-						<h:outputLabel for="info" value="#{msg['txt.userProfile.additionalInfos']} " style="vertical-align:top" />
-						<h:panelGroup>
-							<p:inputTextarea id="info"
-								value="#{profileHandler.currentUser.additionalInfo}" rows="5" cols="30"
-								counter="counter" maxlength="255"
-								counterTemplate="#{msg['txt.userProfile.additionalInfos.counter']} {0}" />
-							<h:outputLabel />
-							<br />
-							<h:outputLabel id="counter" />
-						</h:panelGroup>
-
+						<h:form id="picUpload">
+						<h:outputLabel value="Profilbild" />
+						<p:graphicImage value="#{profileHandler.userImage}"
+							rendered="#{profileHandler.userImage != null}" height="200" />
+						<p:fileUpload
+							fileUploadListener="#{profileHandler.handleFileUpload}"
+							mode="advanced" dragDropSupport="false" auto="true"
+							update=":form" allowTypes="/(.|\/)(gif|jpe?g|png)$/"
+							fileLimit="1"
+							fileLimitMessage="Sie dürfen max nur ein Profilbild hochladen"
+							label="Bild hochladen" />
+						</h:form>
 					</h:panelGrid>
-					<p:commandButton value="#{msg['txt.userProfile.save']} "
-						update=":form" icon="ui-icon-disk"
-						actionListener="#{profileHandler.save()}" />
-						<p>
+				</h:panelGrid>
+				<p>
 					<p:commandButton value="#{msg['txt.userProfile.changePassword']} "
 						actionListener="#{profileHandler.save()}" icon="ui-icon-gear"
 						iconPos="right" />
-					<p:commandButton value="#{msg['txt.userProfile.deleteAccount']}" iconPos="right" update=":form"
-						actionListener="#{profileHandler.deleteUser()}" icon="ui-icon-trash">
-						<p:confirm header="#{msg.confirmation}" message="#{msg['confirmation.text.userProfile']}" icon="ui-icon-alert" />
+					<p:commandButton value="#{msg['txt.userProfile.deleteAccount']}"
+						iconPos="right" update=":form"
+						actionListener="#{profileHandler.deleteUser()}"
+						icon="ui-icon-trash">
+						<p:confirm header="#{msg.confirmation}"
+							message="#{msg['confirmation.text.userProfile']}"
+							icon="ui-icon-alert" />
 					</p:commandButton>
 				</p>
-				</p:panel>
-				
-				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-					<p:commandButton value="#{msg.yes}" type="button"	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-					<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-				</p:confirmDialog>
-				
-			</h:form>
+			</p:panel>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+				<p:commandButton value="#{msg.yes}" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{msg.no}" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+
 		</ui:define>
 	</ui:composition>
 </h:body>

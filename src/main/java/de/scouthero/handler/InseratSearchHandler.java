@@ -18,6 +18,11 @@ import de.scouthero.services.InseratService;
 import de.scouthero.util.Defs.AccountTyp;
 import de.scouthero.util.ScoutheroException;
 
+/**
+ * Handler für das Suchen von Inseraten
+ * @author rgesell
+ *
+ */
 @ViewScoped
 @ManagedBean
 public class InseratSearchHandler extends ViewScopedHandler {
@@ -31,10 +36,16 @@ public class InseratSearchHandler extends ViewScopedHandler {
 	@EJB
 	private InseratService inseratService;
 	
+	/**
+	 * Konstruktor (Standard Suchoption ist für Vereine)
+	 */
 	public InseratSearchHandler() {
 		selectedSearchOption = AccountTyp.VEREIN; 
 	}
 	
+	/**
+	 * Lädt die Inserate anhand der Suchoption
+	 */
 	@PostConstruct
 	private void loadInserate() {
 		final String methodName = "loadInserate()";
@@ -46,7 +57,12 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		}
 	}
 	
+	/**
+	 * Inserat annehmen
+	 */
 	public void approve() {
+		final String methodName = "approve()";
+		debugEnter(logger, methodName);
 		if (selectedInserat != null && currentUser != null) {
 			try {
 				inseratService.contactUserInserat(selectedInserat, currentUser);
@@ -73,6 +89,9 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		}
     }
 	
+	/**
+	 * Speichert den aktuellen Benutzer, als Interessierter für das selektierte Inserat
+	 */
 	public void linkToInteresting() {
 		final String methodName = "linkToInteresting()";
 		debugEnter(logger, methodName);
@@ -85,6 +104,9 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		}
 	}
 	
+	/**
+	 * löscht den aktuellen Bnutzer von der Interessiertenliste des selektierten Inserates
+	 */
 	public void unLinkToInteresting() {
 		final String methodName = "unLinkToInteresting()";
 		debugEnter(logger, methodName);
@@ -97,7 +119,12 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		}
 	}
 	
-	public boolean isAlreadyLinkedToInserat(final Inserat inserat) {
+	/**
+	 * 
+	 * @param inserat
+	 * @return
+	 */
+	public boolean isAlreadyInterestedToInserat(final Inserat inserat) {
 		if (currentUser != null) {
 			try {
 				return inseratService.isAlreadyLinkedToInterestingPeople(inserat, currentUser);
@@ -108,7 +135,13 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param inserat
+	 * @return
+	 */
 	public boolean playerHasTransferContact(Inserat inserat) {
+		if (currentUser == null) return false;
 		try {
 			return inseratService.playerHasTransferContact(inserat, currentUser);
 		} catch (ScoutheroException e) {
@@ -117,6 +150,10 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean playerHasTransferContact() {
 		return playerHasTransferContact(selectedInserat);
 	}
@@ -131,6 +168,10 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		this.selectedInserat = null;
     }
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getSelectedSearchOption () {
 		if (selectedSearchOption != null) {
 			return selectedSearchOption.value();
@@ -138,6 +179,10 @@ public class InseratSearchHandler extends ViewScopedHandler {
 		return AccountTyp.VEREIN.value();
 	}
 	
+	/**
+	 * 
+	 * @param value
+	 */
 	public void setSelectedSearchOption(int value) {
 		switch (value) {
 		case 2:
@@ -149,6 +194,8 @@ public class InseratSearchHandler extends ViewScopedHandler {
 			break;
 		}
 	}
+	
+	/* Getter & Setter */
 	
 	/**
 	 * @return the inserate

@@ -8,11 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+
+import de.scouthero.util.Defs.AccountTyp;
 
 /**
  * @author rgesell
@@ -20,6 +23,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @NamedQueries({
+		@NamedQuery(name = "User.findAll", query = "select u from User u order by u.registerDate DESC"),
 		@NamedQuery(name = "User.findByEmailOrLogin", query = "select u from User u where u.email = :email or u.loginName = :loginName"),
 		@NamedQuery(name = "User.findByLoginAndPass", query = "select u from User u where u.loginName = :loginName and u.password = :password") })
 public class User implements Serializable {
@@ -49,6 +53,11 @@ public class User implements Serializable {
 	
 	@OneToMany(mappedBy="creator")
 	private Set<Inserat> ads;
+	
+	@Lob
+	private byte[] image;
+	private String imageName;
+	private String imageType;
 	
 	public User() {
 		// constructor
@@ -239,8 +248,8 @@ public class User implements Serializable {
 	}
 
 	@Transient
-	public String getTypeAsString() {
-		return this!=null && this.getType() == 1? "Spieleraccount":"Vereinsaccount";
+	public AccountTyp getAccountType() {
+		return getType() == AccountTyp.VEREIN.value() ? AccountTyp.VEREIN : AccountTyp.SPIELER;
 	}
 
 	@Override
@@ -277,6 +286,48 @@ public class User implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public byte[] getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	/**
+	 * @return the imageName
+	 */
+	public String getImageName() {
+		return imageName;
+	}
+
+	/**
+	 * @param imageName the imageName to set
+	 */
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	/**
+	 * @return the imageType
+	 */
+	public String getImageType() {
+		return imageType;
+	}
+
+	/**
+	 * @param imageType the imageType to set
+	 */
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 	
 }

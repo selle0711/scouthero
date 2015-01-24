@@ -126,6 +126,20 @@ public class InseratServiceBean implements InseratService {
 		em.remove(inserat2Delete);
 	}
 	
+	public List<Inserat> loadInserate() throws ScoutheroException {
+		final String methodName = "loadInserate()";
+		debugEnter(logger, methodName);
+		List<Inserat> inserate = null;
+		try {
+			TypedQuery<Inserat> query = em.createNamedQuery("Inserat.findAll", Inserat.class);
+			inserate = query.getResultList();
+		} catch (Exception e) {
+			throw new ScoutheroException(e);
+		}
+		debugExit(logger, methodName, "inserate=", inserate);
+		return inserate;
+	}
+	
 	/**
 	 * @param searchOption
 	 * @throws ScoutheroException

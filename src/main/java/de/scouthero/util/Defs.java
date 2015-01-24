@@ -3,12 +3,18 @@ package de.scouthero.util;
 
 public class Defs {
 	public static enum AccountTyp {
-		VEREIN(1),
-		SPIELER(2);
+		VEREIN(1, "Vereinsaccount"),
+		SPIELER(2, "Spieleraccount");
 		
 		private int value;
-		private AccountTyp(int value) {
+		private String typAsString;
+		private AccountTyp(int value, String name) {
 			this.value = value;
+			this.typAsString = name;
+		}
+		
+		public String typAsString() {
+			return this.typAsString;
 		}
 		
 		public int value() {

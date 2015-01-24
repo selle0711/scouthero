@@ -102,7 +102,7 @@ public class Login extends AbstractHandler {
 	
 	public String getTypeAsString() {
 		if (user != null) {
-			return user.getType() == AccountTyp.VEREIN.value()? "Vereinsaccount": "Spieleraccount";
+			return getAccountType().typAsString();
 		} 
 		return null;
 	}

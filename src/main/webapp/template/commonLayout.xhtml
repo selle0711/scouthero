@@ -10,7 +10,8 @@
 	</h:head>
 	<body>
 		<div id="header">
-			<img src="template/images/logo_scouthero.jpg" alt="Logo von scouthero.de"/>
+			<img src="template/images/logo_scouthero.png" alt="Logo von scouthero.de"/>
+			<!-- <img src="template/images/banner.gif"/> -->
 		</div>
 		<div id="menue">
 			<ui:insert name="breadcrumb" />
@@ -72,9 +73,10 @@
 			<div id="subContent">
 				<ui:insert name="content" />
 			</div>
+			<div id="footer">
+			<h:outputLink value="impressum.xhtml">Impressum</h:outputLink>#{msg.footer}
 		</div>
-		<div id="footer">
-			#{msg.footer}
 		</div>
+		
 	</body>
 </html>

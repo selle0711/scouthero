@@ -101,7 +101,7 @@ public class MyClubHandler extends ViewScopedHandler {
 	private List<Team> loadClubTeams() {
 		final String methodName = "loadUserTeams()";
 		debugEnter(logger, methodName);
-		if (selectedUserClub != null) {
+		if (selectedUserClub != null && selectedUserClub.getId() != null) {
 			try {
 				return clubService.getClubTeams(this.selectedUserClub);
 			} catch (ScoutheroException e) {
@@ -212,10 +212,13 @@ public class MyClubHandler extends ViewScopedHandler {
 			try {
 				clubService.saveClub(selectedUserClub, currentUser);
 				addMessage(FacesMessage.SEVERITY_INFO, "Änderung erfolgreich gespeichert");
-				resetShowPanel();;
+				resetShowPanel();
+				loadUserClubs();
 			} catch (ScoutheroException e) {
 				addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			}
+		} else {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Übergebene Daten sind NULL - Verein konnte nicht gespeichert werden");
 		}
 	}
 	
@@ -332,8 +335,8 @@ public class MyClubHandler extends ViewScopedHandler {
 	}
 
 	public void setSelectedUserClub(Club selectedUserClub) {
-		this.selectedUserClub = selectedUserClub;
-		if (this.selectedUserClub != null) {
+		if (selectedUserClub != null) {
+			this.selectedUserClub = selectedUserClub;
 			this.userTeams = loadClubTeams();
 		}
 	}

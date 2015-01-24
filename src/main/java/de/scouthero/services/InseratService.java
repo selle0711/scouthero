@@ -18,6 +18,7 @@ public interface InseratService {
 	public List<Inserat> loadUserInserate(User currentUser) throws ScoutheroException;
 	public void deleteInserat(Inserat inserat) throws ScoutheroException;
 	public List<Inserat> loadInserate(AccountTyp selectedSearchOption) throws ScoutheroException;
+	public List<Inserat> loadInserate() throws ScoutheroException;
 	public void viewDetails(Inserat inserat) throws ScoutheroException;
 	public void linkToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
 	public void unLinkToInterestingPeople(Inserat inserat, User user) throws ScoutheroException;
