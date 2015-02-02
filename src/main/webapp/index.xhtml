@@ -8,80 +8,116 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-		
-	<h:body>
-		<ui:composition template="template/commonLayout.xhtml"
-			xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="Home" outcome="index" />
+			</p:breadCrumb>
+		</ui:define>
+
+		<ui:define name="content">
+			<!-- 
+			<p:panel header=" #{msg.header}" styleClass="contentPanel"
+				rendered="#{login.loggedIn == false}">
+				<p:imageSwitch effect="fade" style="float:left">
+					<ui:repeat value="#{imageSwitchBean.indexPageImages}" var="image">
+						<p:graphicImage value="template/images/#{image}" />
+					</ui:repeat>
+				</p:imageSwitch>
+
+				<p>
+					Stelle Dich Deiner neuen Herausforderungen!! <br /> Mach Dein Hobby
+					ein bisschen professioneller!! <br />
+					<br /> Scouthero.de ist die erste Transfer-Plattform für
+					Amateursportler und Vereine. <br /> Lass Scouthero.de Dein Agent
+					sein. <br />
+					<br /> Registriere Dich hier und realisiere Deine Ziele!
+				</p>
+			</p:panel>
+			-->
 			
-			<ui:define name="breadcrumb">
-				<p:breadCrumb>  
-				    <p:menuitem value="Home" outcome="index" />  
-				</p:breadCrumb> 
-			</ui:define>
-			
-			<ui:define name="content">
-				<p:panel header=" #{msg.header}" styleClass="contentPanel" rendered="#{userHandler.loggedIn == false}"> 
-					<p:imageSwitch effect="fade" style="float:left">  
-					    <ui:repeat value="#{imageSwitchBean.indexPageImages}" var="image">  
-					        <p:graphicImage value="template/images/#{image}" />  
-					    </ui:repeat>  
-					</p:imageSwitch> 
+			<p:panel header=" #{msg.header}" styleClass="contentPanel">
+				<p:panelGrid columns="2">
+					<p:panel header="Willkommen">
+						Stelle Dich Deiner neuen Herausforderungen!! <br /> Mach Dein Hobby
+						ein bisschen professioneller!! <br />
+						<br /> Scouthero.de ist die erste Transfer-Plattform für
+						Amateursportler und Vereine. <br /> Lass Scouthero.de Dein Agent
+						sein. <br />
+						<br /> Registriere Dich hier und realisiere Deine Ziele!
+						<p:imageSwitch effect="fade">
+							<ui:repeat value="#{imageSwitchBean.indexPageImages}" var="image">
+								<p:graphicImage value="template/images/#{image}" />
+							</ui:repeat>
+						</p:imageSwitch>
+					</p:panel>
 					
-					<p>
-						Stelle Dich Deiner neuen Herausforderungen!! <br/>
-						Mach Dein Hobby ein bisschen professioneller!!
-						<br/><br/>
-						Scouthero.de ist die erste Transfer-Plattform für Amateursportler und Vereine. <br/>
-						Lass Scouthero.de Dein Agent sein.
-						<br/><br/>
-						Registriere Dich hier und realisiere Deine Ziele!
-					</p>  
-				</p:panel>
-				<p:panel header=" #{msg.header}" styleClass="contentPanel" rendered="#{userHandler.loggedIn}"> 
-					<p:panelGrid columns="2">
-						<p:panel header="Transferbörse" footer="Visca el Barca!">
-							<h:outputText
-								value="FC Barcelona is one of only three clubs never to have been relegated from La Liga and is the most successful club in Spanish football along with Real Madrid,  
-						        having won twenty La Liga titles, a record twenty-five Spanish Cups, eight Spanish Super Cups, four Eva Duarte Cups and two League Cups.  
-						        They are also one of the most successful clubs  in European football having won fourteen official major trophies in total,  
-						        including ten UEFA competitions. They have won three UEFA Champions League titles, a record four UEFA Cup Winners' Cups,  
-						        a record three InterCities Fairs Cups (the forerunner to the UEFA Europa League), three UEFA Super Cups and one FIFA Club World Cup.  
-						        The club is also the only European side to have played continental football in every season since its inception in 1955." />
-						</p:panel>
-						<p:panel header="Neuigkeiten" footer="Visca el Barca!">
-							<h:outputText
-								value="FC Barcelona is one of only three clubs never to have been relegated from La Liga and is the most successful club in Spanish football along with Real Madrid,  
-						        having won twenty La Liga titles, a record twenty-five Spanish Cups, eight Spanish Super Cups, four Eva Duarte Cups and two League Cups.  
-						        They are also one of the most successful clubs  in European football having won fourteen official major trophies in total,  
-						        including ten UEFA competitions. They have won three UEFA Champions League titles, a record four UEFA Cup Winners' Cups,  
-						        a record three InterCities Fairs Cups (the forerunner to the UEFA Europa League), three UEFA Super Cups and one FIFA Club World Cup.  
-						        The club is also the only European side to have played continental football in every season since its inception in 1955." />
-						</p:panel>
-						<p:panel header="Aktuelle Angebote" footer="Visca el Barca!">
-							<h:outputText
-								value="FC Barcelona is one of only three clubs never to have been relegated from La Liga and is the most successful club in Spanish football along with Real Madrid,  
-						        having won twenty La Liga titles, a record twenty-five Spanish Cups, eight Spanish Super Cups, four Eva Duarte Cups and two League Cups.  
-						        They are also one of the most successful clubs  in European football having won fourteen official major trophies in total,  
-						        including ten UEFA competitions. They have won three UEFA Champions League titles, a record four UEFA Cup Winners' Cups,  
-						        a record three InterCities Fairs Cups (the forerunner to the UEFA Europa League), three UEFA Super Cups and one FIFA Club World Cup.  
-						        The club is also the only European side to have played continental football in every season since its inception in 1955." />
-						</p:panel>
-						<p:panel header="Neueste Mitglieder" footer="Visca el Barca!">
-							<h:outputText
-								value="FC Barcelona is one of only three clubs never to have been relegated from La Liga and is the most successful club in Spanish football along with Real Madrid,  
-						        having won twenty La Liga titles, a record twenty-five Spanish Cups, eight Spanish Super Cups, four Eva Duarte Cups and two League Cups.  
-						        They are also one of the most successful clubs  in European football having won fourteen official major trophies in total,  
-						        including ten UEFA competitions. They have won three UEFA Champions League titles, a record four UEFA Cup Winners' Cups,  
-						        a record three InterCities Fairs Cups (the forerunner to the UEFA Europa League), three UEFA Super Cups and one FIFA Club World Cup.  
-						        The club is also the only European side to have played continental football in every season since its inception in 1955." />
-						</p:panel>
+					<p:panel header="Neuigkeiten">
+						Auf der Karte seht Ihr alle Vereine, die sich bei uns registriert haben.<br/><br/>
+						<img border="0" src="#{globalHandler.staticMapForClub}" alt="alle registrierten Vereine" />
+					</p:panel>
+
+					<p:panel header="Aktuelle Angebote">
+						Inserate für 
+						<p:dataTable id="inseratDT" var="inserat" value="#{globalHandler.newestPlayerInseratList}" emptyMessage="#{msg.emptyData}">
+							<p:column headerText="#{msg['txt.inserat.datum']}">
+								<h:outputText value="#{inserat.creationTime}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{msg['txt.inserat.sporttype']}">
+								<h:outputText value="#{inserat.team.sportType.name}" />
+							</p:column>
+							<p:column headerText="Ersteller">
+								<h:outputText value="#{inserat.creator.loginName}" />
+							</p:column>
+						</p:dataTable>
+						
+						<p:dataTable id="inserat2DT" var="inserat" value="#{globalHandler.newestTeamInseratList}" emptyMessage="#{msg.emptyData}">
+							<p:column headerText="#{msg['txt.inserat.datum']}">
+								<h:outputText value="#{inserat.creationTime}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{msg['txt.inserat.sporttype']}">
+								<h:outputText value="#{inserat.team.sportType.name}" />
+							</p:column>
+							<p:column headerText="#{msg['txt.inseratSearch.club']}">
+								<h:outputText value="#{inserat.team.club.name}" />
+							</p:column>
+							<p:column headerText="#{msg['txt.inserat.team']}">
+								<h:outputText value="#{inserat.team.name}" />
+							</p:column>
+						</p:dataTable>
+						
+					</p:panel>
+					
+					<p:panel header="Neueste Mitglieder">
+						<p:dataTable id="userDT" var="user" value="#{globalHandler.newestUserList}" emptyMessage="#{msg.emptyData}">
+							<p:column headerText="#{msg['txt.userProfile.registerDate']}">
+								<h:outputText value="#{user.registerDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{msg['txt.userProfile.loginName']}">
+								<h:outputText value="#{user.loginName}" />
+							</p:column>
+							<p:column headerText="#{msg['txt.userProfile.type']}">
+								<h:outputText value="#{user.accountType.typAsString()}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
 				</p:panelGrid>
 			</p:panel>
-			</ui:define>
-			
-		</ui:composition>
-	</h:body>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
 
 </html>

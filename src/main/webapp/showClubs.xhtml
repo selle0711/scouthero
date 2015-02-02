@@ -14,33 +14,56 @@
 		xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:h="http://java.sun.com/jsf/html"
 		xmlns:ui="http://java.sun.com/jsf/facelets">
-		
+
 		<ui:define name="breadcrumb">
-			<p:breadCrumb>  
-			    <p:menuitem value="Home" outcome="index" />  
-			     <p:menuitem value="Transfermarkt" url="#" />
-			      <p:menuitem value="Vereinssuche" outcome="showClubs" />
-			</p:breadCrumb> 
-		</ui:define>	
-		
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.transfermarkt']}" url="#" />
+				<p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs" />
+			</p:breadCrumb>
+		</ui:define>
+
 		<ui:define name="content">
-			<p:panel header="Vereinssuche" styleClass="contentPanel"> 
-				<p:dataTable value="#{clubHandler.clubs}" sortMode="multiple" var="club" rowClasses="odd, even" headerClass="header" footerClass="footer" styleClass="content">
-					<f:facet name="footer">Stand: <h:outputText value="#{dateHandler.now}"><f:convertDateTime  timeZone="Europe/Berlin" pattern="dd.MM.yyyy HH:mm"/></h:outputText></f:facet>
-					<p:column sortBy="#{club.type}">
-						<f:facet name="header">Sportart</f:facet>
-						#{club.type}
-					</p:column>
-					<p:column>
-						<f:facet name="header">Name</f:facet>
-						#{club.name}
-					</p:column>
-					<p:column sortBy="#{club.city}">
-						<f:facet name="header">Ort</f:facet>
-						#{club.city}
-					</p:column>
-				</p:dataTable>
-			</p:panel>
+			<h:form id="vereinssuche">
+				<p:panel header="#{msg['menue.vereinssuche']}" styleClass="contentPanel">
+					<div style="text-align: left; margin-bottom: 10px">
+						<p:outputLabel value="#{msg['txt.vereinssuche.global']}"/>
+					</div>
+						<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+						
+						<p:dataTable id="dataTable" value="#{clubHandler.clubs}"
+							sortMode="multiple" var="club" rowClasses="odd, even"
+							widgetVar="widget"
+							headerClass="header" footerClass="footer" styleClass="content">
+							<f:facet name="header">
+								<p:outputPanel>
+									<h:outputText value="Search all fields:" />
+									<p:inputText id="globalFilter"
+										onkeyup="PF('widget').filter()" style="width:150px"
+										placeholder="Enter keyword" />
+								</p:outputPanel>
+							</f:facet>
+							<f:facet name="footer">Stand: <h:outputText
+									value="#{dateHandler.now}">
+									<f:convertDateTime timeZone="Europe/Berlin"
+										pattern="dd.MM.yyyy HH:mm" />
+								</h:outputText>
+							</f:facet>
+							<p:column sortBy="#{club.type}" filterMatchMode="contains">
+								<f:facet name="header">#{msg['txt.vereinssuche.feld.sportart']}</f:facet>
+								#{club.type}
+							</p:column>
+							<p:column sortBy="#{club.city} ">
+								<f:facet name="header">#{msg['txt.vereinssuche.feld.stadt']}</f:facet>
+								#{club.city}
+							</p:column>
+							<p:column>
+								<f:facet name="header">#{msg['txt.vereinssuche.feld.verein']}</f:facet>
+								#{club.name}
+							</p:column>
+						</p:dataTable>
+				</p:panel>
+			</h:form>	
 		</ui:define>
 	</ui:composition>
 

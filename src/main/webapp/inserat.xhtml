@@ -6,15 +6,123 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 	
 <h:body>
 	<ui:composition template="template/commonLayout.xhtml"
 		xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:h="http://java.sun.com/jsf/html"
 		xmlns:ui="http://java.sun.com/jsf/facelets">
+		
+		
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.network']}" url="#" />
+				<p:menuitem value="#{msg['menue.inserat']}" outcome="showClubs" />
+			</p:breadCrumb>
+		</ui:define>
+		
 		<ui:define name="content">
-			<h1>Inserat</h1>
+			<h:form id="inseratForm">
+				<p:panel header="#{msg['txt.inserat.header']}" styleClass="contentPanel">
+					<div style="text-align: left; margin-bottom: 10px">
+						<p:outputLabel value="#{msg['txt.inserat.global']}"/>
+					</div>
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+
+					<p:dataTable id="inseratDT" var="inserat" value="#{inseratHandler.inserate}" selectionMode="single" selection="#{inseratHandler.selectedInserat}" rowKey="#{inserat.id}" emptyMessage="#{msg.emptyData}">
+						<p:ajax event="rowSelect" listener="#{inseratHandler.onRowSelect}" update=":inseratForm" />
+        				<p:ajax event="rowUnselect" listener="#{inseratHandler.onRowUnSelect}" update=":inseratForm" />
+				        <f:facet name="footer">
+				            <p:commandButton id="new" value="#{msg['txt.inserat.actions.new']}" actionListener="#{inseratHandler.createNewInserat}" update=":inseratForm" />
+				        </f:facet>
+				        <p:column headerText="#{msg['txt.inserat.datum']}">
+				            <h:outputText value="#{inserat.creationTime}">
+				            	<f:convertDateTime pattern="dd.MM.yyyy" />
+				            </h:outputText>
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.team']}" rendered="#{login.accountType.value()==1}" >
+				            <h:outputText value="#{inserat.team.name}" />
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.sporttype']}">
+				            <h:outputText value="#{inserat.team.sportType.name}" />
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.viewed']}">
+				            <h:outputText value="#{inserat.viewed}" />
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.interest']}">
+				            <h:outputText value="#{inserat.countInterestPeople} " /> 
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.validUntil']}">
+				            <h:outputText value="#{inserat.validUntil}">
+				            	<f:convertDateTime pattern="dd.MM.yyyy" />
+				            </h:outputText>
+				        </p:column>
+				        <p:column headerText="#{msg['txt.inserat.actions']}">
+				        	<p:commandButton title="#{msg['txt.inserat.actions.del']}" icon="ui-icon-trash" action="#{inseratHandler.deleteInserat(inserat)}">
+				        		<p:confirm header="#{msg.confirmation}" message="#{msg['confirmation.text']}" icon="ui-icon-alert" />
+				        	</p:commandButton>
+				        </p:column>
+					</p:dataTable>
+					<br/><br/>
+					<p:panel id = "inseratPanel" rendered="#{inseratHandler.showAdEditPanel}" header="#{inseratHandler.selectedInserat.id == null ? msg['txt.inserat.newInserat'] : msg['txt.inserat.editInserat']}">
+						<h:panelGrid columns="1">
+							<h:outputLabel value="#{msg['txt.inserat.team']}" for="teamAuswahl" rendered="#{login.accountType.value()==1}"/>
+							<p:selectOneMenu id="teamAuswahl" value="#{inseratHandler.selectedUserTeam}" rendered="#{login.accountType.value()==1}">
+					            <f:selectItems value="#{inseratHandler.teams}" var="team" itemLabel="#{team.name}" itemValue="#{team.id}" />
+					        </p:selectOneMenu>
+					        
+					        <h:outputLabel value="#{msg['txt.inserat.sporttype']}" for="sportType" rendered="#{login.accountType.value()==2}"/>
+							<p:selectOneMenu id="sportType" value="#{inseratHandler.selectedSportType}" rendered="#{login.accountType.value()==2}">
+					            <f:selectItems value="#{inseratHandler.sportTypes}" var="sportType" itemLabel="#{sportType.name}" itemValue="#{sportType.id}" />
+					        </p:selectOneMenu>
+					        
+					        <h:outputLabel value="#{msg['txt.inserat.validUntil']}" for="date"/>
+					        <p:calendar id="date" value="#{inseratHandler.selectedInserat.validUntil}" pages="3" required="true" pattern="dd.MM.yyyy"/>
+					        
+					        <p:outputLabel value="#{msg['txt.inserat.description']}" for="descr" />
+							<p:inputTextarea id="descr" rows="10" cols="100" autoResize="false" value="#{inseratHandler.selectedInserat.description}" placeholder="#{msg['txt.inserat.description']}"  required="true" />
+							
+							<h:panelGroup>
+								<p:commandButton value="#{msg['txt.inserat.actions.transferRequests']}" icon="ui-icon-search" onclick="PF('inseratDialog').show();"/>
+								<p:commandButton actionListener="#{inseratHandler.saveInserat()}" value="#{inseratHandler.selectedInserat.id == null ? msg['txt.inserat.persist'] : msg['txt.inserat.edit']}"  update="messages :inseratForm"/>
+							</h:panelGroup>
+						</h:panelGrid>
+					</p:panel>
+				</p:panel>
+			</h:form>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+				<p:commandButton value="#{msg.yes}" type="button"	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+			
+			<p:dialog header="Transferanfragen des Inserates" widgetVar="inseratDialog" dynamic="true" modal="true" width="700">
+			   <p:dataTable value="#{inseratHandler.selectedInserat.transfers}" var="transfer" rowKey="#{transfer.id}">
+			   		 <p:column headerText="date">
+			            <h:outputText value="#{transfer.dateOfInterest}">
+			            	<f:convertDateTime pattern="dd.MM.yyyy" />
+			            </h:outputText>
+			        </p:column>
+			        <p:column headerText="Name" >
+			            <h:outputText value="#{transfer.contactUser.firstName} #{transfer.contactUser.name}" />
+			        </p:column>
+			        <p:column headerText="Approvment" width="200">
+			        	<h:outputText value="Transfer " rendered="#{transfer.approved != null}"/>
+			        	<h:outputText value="nicht " rendered="#{transfer.approved != null and transfer.approved == false}"/>
+			        	<h:outputText value="bestätigt am " rendered="#{transfer.approved != null}" />
+			            <h:outputText value="#{transfer.dateOfApprovment}"  rendered="#{transfer.approved != null}">
+			            	<f:convertDateTime pattern="dd.MM.yyyy" />
+			            </h:outputText>
+			        </p:column>
+			        <p:column>
+			        	<p:commandButton title="approve" icon="ui-icon-circle-check" action="#{inseratHandler.approve(transfer)}" rendered="#{transfer.approved == null}" update=":inseratForm"/>
+			        	<p:commandButton title="disappove" icon="ui-icon-circle-close" action="#{inseratHandler.disApprove(transfer)}" rendered="#{transfer.approved == null}" update=":inseratForm"/>
+			        </p:column>
+			   </p:dataTable>
+			</p:dialog>
 			
 		</ui:define>
 	</ui:composition>

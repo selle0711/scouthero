@@ -18,29 +18,29 @@
 		
 		<ui:define name="breadcrumb">
 			<p:breadCrumb>  
-			    <p:menuitem value="Home" outcome="index" />  
-			     <p:menuitem value="Netzwerk" url="#" />
-			      <p:menuitem value="Anmelden" outcome="login" />
+			   <p:menuitem value="#{msg['menue.home']}" outcome="index" /> 
+			     <p:menuitem value="#{msg['menue.network']}" url="#" />
+			      <p:menuitem value="#{msg['menue.login']}" outcome="login" />
 			</p:breadCrumb> 
 		</ui:define>	
 		
 		<ui:define name="content">
 			<h:form>
-				<p:growl id="messages"/>
-				<p:panel header="Anmeldung" styleClass="loginPanel">  
-					<h:panelGrid columns="2">
-						<p:outputLabel value="Login" for="login"/>
-						<p:inputText id="login" required="true" value="#{userHandler.login}" requiredMessage="Bitte Loginnamen eingeben"/>
-						<p:outputLabel value="Passwort" for="password"/>
-						<p:password id="password" required="true" value="#{userHandler.password}" requiredMessage="Bitte Passwort eingeben"/>
-					</h:panelGrid>
-					<p:commandButton  action="#{userHandler.login}" update="messages" value="anmelden"/><br/>
+				<p:panel header="#{msg['login.header']}" styleClass="loginPanel">  
 					<p>
-						Passwort vergessen?
+						#{msg['txt.login.global']}
+					</p>
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+					<h:panelGrid columns="1">
+						<p:inputText id="username" required="true" value="#{login.username}" placeholder="#{msg['login.user']}" requiredMessage="#{msg['login.user.required']}"/>
+						<p:password id="password" required="true" value="#{login.password}" placeholder="#{msg['login.password']}" requiredMessage="#{msg['login.password.required']}"/>
+						<p:commandButton  action="#{login.login}" update="messages" value="#{msg['login.button']}"/>	
+					</h:panelGrid>
+					<p>
+						<h:outputLink>#{msg['login.forgot.password']}</h:outputLink>
 					</p>
 				</p:panel>
 			</h:form>
-			
 		</ui:define>
 	</ui:composition>
 </h:body>

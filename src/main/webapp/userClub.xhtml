@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>
+				<p:menuitem value="#{msg['menue.home']}" outcome="index" />
+				<p:menuitem value="#{msg['menue.network']}" url="#" />
+				<p:menuitem value="#{msg['menue.myClub']}" outcome="userClub" />
+			</p:breadCrumb>
+		</ui:define>
+			
+		<ui:define name="content">
+			<h:form id="userClub">
+				<p:panel header="#{msg['txt.userClub.header']}" styleClass="contentPanel">
+					<div style="text-align: left; margin-bottom: 10px">
+						<p:outputLabel value="#{msg['txt.userClub.global']}"/>
+					</div>
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+					
+					<p:dataTable id="clubsDT" var="club" value="#{myClubHandler.userClub}" selectionMode="single" selection="#{myClubHandler.selectedUserClub}" rowKey="#{club.id}" emptyMessage="#{msg.emptyData}">
+						<p:ajax event="rowSelect" listener="#{myClubHandler.onClubRowSelect}" update=":userClub" />
+        				<p:ajax event="rowUnselect" listener="#{myClubHandler.onClubRowUnSelect}" update=":userClub" />
+				        <f:facet name="footer">
+				            <p:commandButton id="new" value="#{msg['txt.userClub.actions.new']}" actionListener="#{myClubHandler.createNewClub}" update=":userClub" />
+				        </f:facet>
+						<p:column headerText="#{msg['txt.userClub.name']}">
+				            <h:outputText value="#{club.name}" />
+				        </p:column>
+				        <p:column headerText="#{msg['txt.userClub.type']}">
+				            <h:outputText value="#{club.type}" />
+				        </p:column>		
+				        <p:column headerText="#{msg['txt.userClub.city']}">
+				            <h:outputText value="#{club.city}" />
+				        </p:column>	
+				        <p:column headerText="#{msg['txt.userClub.actions']}">
+				        	<p:commandButton title="#{msg['txt.userClub.actions.edit']}" icon="ui-icon-pencil" action="#{myClubHandler.onClubEdit(club)}" update=":userClub"/>
+				        	<p:commandButton title="#{msg['txt.userClub.actions.del']}" icon="ui-icon-trash" action="#{myClubHandler.deleteClub(club)}" update=":userClub">
+				        		<p:confirm header="#{msg.confirmation}" message="#{msg['confirmation.text.userClub']}" icon="ui-icon-alert" />
+				        	</p:commandButton>
+				        </p:column>
+				        
+					</p:dataTable>
+					
+					<p:panel id="clubPanel" rendered="#{myClubHandler.showClubPanel}" header="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.newClub'] : msg['txt.userClub.editClub']}">
+						<h:panelGrid columns="1">
+							<p:inputText value="#{myClubHandler.selectedUserClub.name}" placeholder="#{msg['txt.userClub.name']}" rendered="true" required="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.type}" placeholder="#{msg['txt.userClub.type']}"  required="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.street}" placeholder="#{msg['txt.userClub.street']}"  rendered="true" required="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.plz}" placeholder="#{msg['txt.userClub.plz']}"  rendered="true"  required="true"/>
+							<p:inputText value="#{myClubHandler.selectedUserClub.city}" placeholder="#{msg['txt.userClub.city']}"  rendered="true" required="true"/>
+							<p:inputTextarea rows="10" cols="100" value="#{myClubHandler.selectedUserClub.description}" placeholder="#{msg['txt.userClub.descr']}" />
+							<p:commandButton actionListener="#{myClubHandler.saveClub()}" value="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.persist'] : msg['txt.userClub.edit']}"  update="messages :userClub"/>
+						</h:panelGrid>
+					</p:panel> 
+					
+					<p:panel id="teamPanel" header="#{msg['txt.userClub.teams']}" rendered="#{myClubHandler.showTeamPanel}" >
+						<p:dataTable id="teamsDT" var="team" value="#{myClubHandler.userTeams}" selectionMode="single" selection="#{myClubHandler.selectedUserTeam}" rowKey="#{team.id}" emptyMessage="#{msg.emptyData}">
+							<p:ajax event="rowSelect" listener="#{myClubHandler.onTeamRowSelect}" update=":userClub" />
+	        				<p:ajax event="rowUnselect" listener="#{myClubHandler.onTeamRowUnSelect}" update=":userClub" />
+					        <f:facet name="footer">
+					            <p:commandButton id="new" value="#{msg['txt.userClub.actions.newTeam']}" actionListener="#{myClubHandler.createNewTeam}" update=":userClub" />
+					        </f:facet>
+					        <p:column headerText="#{msg['txt.userClub.sportType']}">
+					            <h:outputText value="#{team.sportType.name}" />
+					        </p:column>
+							<p:column headerText="#{msg['txt.userClub.nameTeam']}">
+					            <h:outputText value="#{team.name}" />
+					        </p:column>
+					       <p:column headerText="#{msg['txt.userClub.alter']}">
+					        	<h:outputText value="#{team.minAge}" /> - <h:outputText value="#{team.maxAge}" />
+					       </p:column>
+					       <p:column headerText="#{msg['txt.userClub.leistung']}">
+					        	<h:outputText value="#{team.leistungsKlasse}" />
+					       </p:column>
+					        <p:column headerText="#{msg['txt.userClub.actions']}">
+					        	<p:commandButton title="#{msg['txt.userClub.actions.del']}" icon="ui-icon-trash" action="#{myClubHandler.deleteTeam(team)}" update=":userClub">
+					        		<p:confirm header="#{msg.confirmation}" message="#{msg['confirmation.text']}" icon="ui-icon-alert" />
+					        	</p:commandButton>
+					        </p:column>
+						</p:dataTable>
+					
+						<p:panel id="teamEditPanel" rendered="#{myClubHandler.showTeamEditPanel}" header="#{myClubHandler.selectedUserTeam.id == null ? msg['txt.userClub.newTeam'] : msg['txt.userClub.editTeam']}">
+							<h:panelGrid columns="1">
+								<p:inputText value="#{myClubHandler.selectedUserTeam.name}" placeholder="#{msg['txt.userClub.nameTeam']}" required="true"/>
+								<h:outputLabel value="#{msg['txt.userClub.sportType']}"  for="sportType"/>
+						        <p:selectOneMenu id="sportType" value="#{myClubHandler.selectedSportTypId}"  required="true">
+						            <f:selectItems value="#{myClubHandler.alleSportarten}" var="sportType" itemLabel="#{sportType.name}" itemValue="#{sportType.id}" />
+						        </p:selectOneMenu>
+
+						        <h:outputLabel value="#{msg['txt.userClub.alter']}"  for="alterstufe"/>
+						        <h:outputText id="displayRange" value="Zwischen #{myClubHandler.selectedUserTeam.minAge} und #{myClubHandler.selectedUserTeam.maxAge}" />
+						        <p:slider for="txt6,txt7" display="displayRange" style="width: 400px" range="true" displayTemplate="Zwischen {min} und {max}" />
+							    <h:inputHidden id="txt6" value="#{myClubHandler.selectedUserTeam.minAge}" />
+							    <h:inputHidden id="txt7" value="#{myClubHandler.selectedUserTeam.maxAge}" />
+						        
+						        
+						        <h:outputLabel value="#{msg['txt.userClub.leistung']}"  for="leistung"/>
+						        <p:selectOneMenu id="leistung" value="#{myClubHandler.selectedUserTeam.leistungsKlasse}" required="true">
+						        	<f:selectItems value="#{myClubHandler.leistungsklassen}"/>
+						        </p:selectOneMenu>
+								<p:inputTextarea rows="10" cols="100" value="#{myClubHandler.selectedUserTeam.description}" placeholder="#{msg['txt.userClub.descr']}" />
+								<p:commandButton actionListener="#{myClubHandler.saveTeam()}" value="#{myClubHandler.selectedUserClub.id == null ? msg['txt.userClub.persistTeam'] : msg['txt.userClub.editTeam']}"  update="messages :userClub"/>
+							</h:panelGrid>
+						</p:panel>
+						
+					</p:panel>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+					<p:commandButton value="#{msg.yes}" type="button"	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+  

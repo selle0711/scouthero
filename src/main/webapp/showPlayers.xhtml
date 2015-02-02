@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="template/commonLayout.xhtml"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+		
+		<ui:define name="breadcrumb">
+			<p:breadCrumb>  
+			    <p:menuitem value="Home" outcome="index" />  
+			     <p:menuitem value="Transfermarkt" url="#" />
+			      <p:menuitem value="Vereinssuche" outcome="showClubs" />
+			</p:breadCrumb> 
+		</ui:define>	
+		
+		<ui:define name="content">
+			<p:panel header="Vereinssuche" styleClass="contentPanel"> 
+				<p:dataTable value="#{clubHandler.clubs}" sortMode="multiple" var="club" rowClasses="odd, even" headerClass="header" footerClass="footer" styleClass="content">
+					<f:facet name="footer">Stand: <h:outputText value="#{dateHandler.now}"><f:convertDateTime  timeZone="Europe/Berlin" pattern="dd.MM.yyyy HH:mm"/></h:outputText></f:facet>
+					<p:column sortBy="#{club.type}">
+						<f:facet name="header">Sportart</f:facet>
+						#{club.type}
+					</p:column>
+					<p:column>
+						<f:facet name="header">Name</f:facet>
+						#{club.name}
+					</p:column>
+					<p:column sortBy="#{club.city}">
+						<f:facet name="header">Ort</f:facet>
+						#{club.city}
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>

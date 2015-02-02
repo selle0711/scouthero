@@ -10,40 +10,60 @@
 	</h:head>
 	<body>
 		<div id="header">
-			<img src="template/images/logo_scouthero.jpg" alt="Logo von scouthero.de"/>
+			<img src="template/images/logo_scouthero.png" alt="Logo von scouthero.de"/>
+			<!-- <img src="template/images/banner.gif"/> -->
 		</div>
 		<div id="menue">
 			<ui:insert name="breadcrumb" />
 		</div>
 		<div id="leftPanel">
 			<h:form>
-				<p:growl id="messages"/>  
-				<p:menu model="#{menuBean.model}"/>  
+				<p:growl id="messages"/> 			
+				 <p:menu toggleable="true">
+			        <p:submenu label="#{msg['menue.navigation']}">
+			            <p:menuitem value="#{msg['menue.home']}" outcome="index.xhtml" updare="subContent" ajax="true" icon="ui-icon-home" />
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.transfermarkt']}">
+			            <p:menuitem value="#{msg['menue.vereinssuche']}" outcome="showClubs.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			            <p:menuitem value="#{msg['menue.spielersuche']}" outcome="showPlayers.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			            <p:menuitem value="#{msg['menue.inseratSearch']}" outcome="inseratSearch.xhtml" update="subContent" ajax="true" icon="ui-icon-search"/>
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{!login.loggedIn}">
+			            <p:menuitem value="#{msg['menue.login']}" url="login.xhtml" update="subContent" ajax="true" icon="ui-icon-key"/>
+			            <p:menuitem value="#{msg['menue.register']}" outcome="registerProfile.xhtml" update="subContent" ajax="true" icon="ui-icon-person"/>
+			        </p:submenu>
+			        <p:submenu label="#{msg['menue.network']}" rendered="#{login.loggedIn}">
+			        	<p:menuitem value="#{msg['menue.myClub']}" rendered="#{login.accountType.value()==1}" outcome="userClub" update="subContent" ajax="true" icon="ui-icon-home"/>
+			            <p:menuitem value="#{msg['menue.inserat']}" outcome="inserat.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-calendar"/>
+			            <p:menuitem value="#{msg['menue.messages']}" outcome="messages.xhtml" rendered="#{login.loggedIn}" update="subContent" ajax="true" icon="ui-icon-mail-open"/>
+			         	<p:menuitem value="#{msg['menue.logoff']}" action="#{login.logout}" icon="ui-icon-power"/>
+			        </p:submenu>
+			    </p:menu>
+				  
 				<br/>
 
-				<p:panel rendered="#{userHandler.loggedIn}" header="#{userHandler.type}">
+				<p:panel rendered="#{login.loggedIn}" header="#{login.typeAsString}">
 					<h:panelGrid columns="2">
 						
 						<h:outputText styleClass="ui-icon  ui-icon-person" />
-						<p:outputLabel value="#{userHandler.user.firstName} #{userHandler.user.name}" /> 
+						<p:outputLabel value="#{login.user.firstName} #{login.user.name}" /> 
 						
 						<h:outputText styleClass="ui-icon  ui-icon-mail-closed" />
-						<p:outputLabel value="0 Nachrichten"/>
+						<p:outputLabel value="#{globalHandler.countMyMessages(login.user)} neue Nachrichten"/>
 						
 						<h:outputText styleClass="ui-icon  ui-icon-calculator" />
 						<p:outputLabel value="#{userHandler.registerDate}"/>
 					</h:panelGrid>
 					
 					<f:facet name="actions">
-						<h:commandLink action="#{userHandler.logout}"
+						<h:commandLink action="#{login.logout}"
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-power" />
 						</h:commandLink>
-						<h:commandLink action="../userProfile"
+						<h:commandLink action="userProfile"
 							styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
 							<h:outputText styleClass="ui-icon  ui-icon-wrench" />
 						</h:commandLink>
-						
 					</f:facet>
 				</p:panel>
 			</h:form>
@@ -53,9 +73,10 @@
 			<div id="subContent">
 				<ui:insert name="content" />
 			</div>
+			<div id="footer">
+			<h:outputLink value="impressum.xhtml">Impressum</h:outputLink>#{msg.footer}
 		</div>
-		<div id="footer">
-			#{msg.footer}
 		</div>
+		
 	</body>
 </html>

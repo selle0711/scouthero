@@ -4,7 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.Transient;
+
+import de.scouthero.util.Defs.AccountTyp;
 
 /**
  * @author rgesell
@@ -12,8 +23,9 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "User.findByEmailOrLogin", query = "from User u where u.email = :email or u.loginName = :loginName"),
-		@NamedQuery(name = "User.findByLoginAndPass", query = "from User u where u.loginName = :loginName and u.password = :password") })
+		@NamedQuery(name = "User.findAll", query = "select u from User u order by u.registerDate DESC"),
+		@NamedQuery(name = "User.findByEmailOrLogin", query = "select u from User u where u.email = :email or u.loginName = :loginName"),
+		@NamedQuery(name = "User.findByLoginAndPass", query = "select u from User u where u.loginName = :loginName and u.password = :password") })
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 6916366206935470020L;
@@ -28,7 +40,9 @@ public class User implements Serializable {
 	private String name;
 	private String firstName;
 	private int type;
-	private int age;
+	
+	@Temporal(javax.persistence.TemporalType.DATE)
+	private Date birthDate;
 	private int postalCode;
 	private String city;
 	private String phone;
@@ -37,8 +51,13 @@ public class User implements Serializable {
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date registerDate;
 	
-	@OneToMany(mappedBy="user")
-	private Set<Ad> ads;
+	@OneToMany(mappedBy="creator")
+	private Set<Inserat> ads;
+	
+	@Lob
+	private byte[] image;
+	private String imageName;
+	private String imageType;
 	
 	public User() {
 		// constructor
@@ -151,30 +170,16 @@ public class User implements Serializable {
 	}
 	
 	/**
-	 * @return the type
-	 */
-	public int getAge() {
-		return age;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	/**
 	 * @return the ads
 	 */
-	public Set<Ad> getAds() {
+	public Set<Inserat> getAds() {
 		return ads;
 	}
 
 	/**
 	 * @param ads the ads to set
 	 */
-	public void setAds(Set<Ad> ads) {
+	public void setAds(Set<Inserat> ads) {
 		this.ads = ads;
 	}
 
@@ -232,6 +237,97 @@ public class User implements Serializable {
 	 */
 	public void setAdditionalInfo(String additionalInfo) {
 		this.additionalInfo = additionalInfo;
+	}
+	
+	public Date getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	@Transient
+	public AccountTyp getAccountType() {
+		return getType() == AccountTyp.VEREIN.value() ? AccountTyp.VEREIN : AccountTyp.SPIELER;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", loginName=" + loginName + ", name=" + name	+ "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public byte[] getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	/**
+	 * @return the imageName
+	 */
+	public String getImageName() {
+		return imageName;
+	}
+
+	/**
+	 * @param imageName the imageName to set
+	 */
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	/**
+	 * @return the imageType
+	 */
+	public String getImageType() {
+		return imageType;
+	}
+
+	/**
+	 * @param imageType the imageType to set
+	 */
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 	
 }
